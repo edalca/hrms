@@ -90,7 +90,7 @@
   },
   {
    "default": "0",
-   "description": "These leaves are holidays permitted by the company however, availing it is optional for an Employee.",
+   "description": "These leaves are holidays permitted by the company however, availing it is optional for an Employee",
    "fieldname": "is_optional_leave",
    "fieldtype": "Check",
    "label": "Is Optional Leave"
@@ -202,7 +202,7 @@
   },
   {
    "default": "0",
-   "description": "Allows allocating more leaves than the number of days in the allocation period.",
+   "description": "Allows allocating more leaves than the number of days in the allocation period",
    "fieldname": "allow_over_allocation",
    "fieldtype": "Check",
    "label": "Allow Over Allocation"
@@ -235,7 +235,7 @@
  "icon": "fa fa-flag",
  "idx": 1,
  "links": [],
- "modified": "2024-12-18 19:51:44.162375",
+ "modified": "2025-04-08 14:28:51.266028",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leave Type",
@@ -267,10 +267,24 @@
   {
    "read": 1,
    "role": "Employee"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Administrator",
+   "share": 1,
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "title_field": "leave_type_name",
  "track_changes": 1
 }

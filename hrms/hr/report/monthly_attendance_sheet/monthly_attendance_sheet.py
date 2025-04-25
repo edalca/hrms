@@ -19,11 +19,11 @@ status_map = {
 	"Half Day": "HD",
 	"Work From Home": "WFH",
 	"On Leave": "L",
-	"Holiday": "H",
+	"On Holiday": "H",
 	"Weekly Off": "WO",
 }
 
-day_abbr = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+day_abbr = ["Mon","Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
 
 
 def execute(filters: Filters | None = None) -> tuple:
@@ -66,7 +66,7 @@ def get_message() -> str:
 	for status, abbr in status_map.items():
 		message += f"""
 			<span style='border-left: 2px solid {colors[count]}; padding-right: 12px; padding-left: 5px; margin-right: 3px;'>
-				{status} - {abbr}
+				{_(status)} - {abbr}
 			</span>
 		"""
 		count += 1
@@ -175,7 +175,7 @@ def get_columns_for_days(filters: Filters) -> list[dict]:
 		# forms the dates from selected year and month from filters
 		date = f"{cstr(filters.year)}-{cstr(filters.month)}-{day}"
 		# gets abbr from weekday number
-		weekday = day_abbr[getdate(date).weekday()]
+		weekday = _(day_abbr[getdate(date).weekday()])
 		# sets days as 1 Mon, 2 Tue, 3 Wed
 		label = f"{day} {weekday}"
 		days.append({"label": label, "fieldtype": "Data", "fieldname": day, "width": 65})
@@ -647,9 +647,9 @@ def get_chart_data(attendance_map: dict, filters: Filters) -> dict:
 		"data": {
 			"labels": labels,
 			"datasets": [
-				{"name": "Absent", "values": absent},
-				{"name": "Present", "values": present},
-				{"name": "Leave", "values": leave},
+				{"name": _("Absent"), "values": absent},
+				{"name": _("Present"), "values": present},
+				{"name": _("Leave"), "values": leave},
 			],
 		},
 		"type": "line",

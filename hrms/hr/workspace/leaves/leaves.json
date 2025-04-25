@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"GryoRrWdb3\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"_vT0S80v7-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Application\",\"col\":3}},{\"id\":\"4lGs1glop_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Allocation\",\"col\":3}},{\"id\":\"kP95qI0Kx_\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"IzQ_B9PEiJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Masters &amp; Reports</b></span>\",\"col\":12}},{\"id\":\"UZU5aC1En3\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":4}},{\"id\":\"gBEhmJgb_7\",\"type\":\"card\",\"data\":{\"card_name\":\"Allocation\",\"col\":4}},{\"id\":\"rtrjT9ZnNs\",\"type\":\"card\",\"data\":{\"card_name\":\"Application\",\"col\":4}},{\"id\":\"xHXxbkgNg3\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
+ "content": "[{\"id\":\"GryoRrWdb3\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Tus accesos directos</b></span>\",\"col\":12}},{\"id\":\"_vT0S80v7-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Application\",\"col\":3}},{\"id\":\"4lGs1glop_\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Leave Allocation\",\"col\":3}},{\"id\":\"kP95qI0Kx_\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"IzQ_B9PEiJ\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Datos Maestros &amp; Informes</b></span>\",\"col\":12}},{\"id\":\"UZU5aC1En3\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":4}},{\"id\":\"gBEhmJgb_7\",\"type\":\"card\",\"data\":{\"card_name\":\"Allocation\",\"col\":4}},{\"id\":\"rtrjT9ZnNs\",\"type\":\"card\",\"data\":{\"card_name\":\"Application\",\"col\":4}},{\"id\":\"xHXxbkgNg3\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}}]",
  "creation": "2022-08-20 16:06:26.672497",
  "custom_blocks": [],
  "docstatus": 0,
@@ -9,6 +9,7 @@
  "hide_custom": 0,
  "icon": "non-profit",
  "idx": 0,
+ "indicator_color": "",
  "is_hidden": 0,
  "label": "Leaves",
  "links": [
@@ -185,7 +186,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-09-29 16:55:20.281587",
+ "modified": "2025-04-09 00:51:32.780260",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Leaves",

@@ -33,7 +33,7 @@ import { useListUpdate } from "@/composables/realtime"
 const activeTab = ref("My Requests")
 const socket = inject("$socket")
 
-const TAB_BUTTONS = ["My Requests", "Team Requests"] // __("My Requests"), __("Team Requests")
+const TAB_BUTTONS = [__("My Requests"), __("Team Requests")] // , 
 
 const myRequests = computed(() =>
 	updateRequestDetails(myLeaves, myClaims, myShiftRequests, myAttendanceRequests)

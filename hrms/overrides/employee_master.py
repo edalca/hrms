@@ -11,18 +11,6 @@ from erpnext.setup.doctype.employee.employee import Employee
 
 class EmployeeMaster(Employee):
 	def autoname(self):
-		naming_method = frappe.db.get_value("HR Settings", None, "emp_created_by")
-		if not naming_method:
-			frappe.throw(_("Please setup Employee Naming System in Human Resource > HR Settings"))
-		else:
-			if naming_method == "Naming Series":
-				set_name_by_naming_series(self)
-			elif naming_method == "Employee Number":
-				self.name = self.employee_number
-			elif naming_method == "Full Name":
-				self.set_employee_name()
-				self.name = self.employee_name
-
 		self.employee = self.name
 
 

@@ -115,7 +115,7 @@
   },
   {
    "default": "0",
-   "description": "If enabled, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted. ",
+   "description": "If enabled, the value specified or calculated in this component will not contribute to the earnings or deductions. However, it's value can be referenced by other components that can be added or deducted.",
    "fieldname": "statistical_component",
    "fieldtype": "Check",
    "label": "Statistical Component"
@@ -167,7 +167,6 @@
    "search_index": 1
   },
   {
-   "depends_on": "eval:doc.statistical_component != 1",
    "fieldname": "section_break_5",
    "fieldtype": "Section Break",
    "label": "Accounts"
@@ -216,7 +215,7 @@
    "fieldname": "help",
    "fieldtype": "HTML",
    "label": "Help",
-   "options": "<h3>Help</h3>\n\n<p>Notes:</p>\n\n<ol>\n<li>Use field <code>base</code> for using base salary of the Employee</li>\n<li>Use Salary Component abbreviations in conditions and formulas. <code>BS = Basic Salary</code></li>\n<li>Use field name for employee details in conditions and formulas. <code>Employment Type = employment_type</code><code>Branch = branch</code></li>\n<li>Use field name from Salary Slip in conditions and formulas. <code>Payment Days = payment_days</code><code>Leave without pay = leave_without_pay</code></li>\n<li>Direct Amount can also be entered based on Condition. See example 3</li></ol>\n\n<h4>Examples</h4>\n<ol>\n<li>Calculating Basic Salary based on <code>base</code>\n<pre><code>Condition: base &lt; 10000</code></pre>\n<pre><code>Formula: base * .2</code></pre></li>\n<li>Calculating HRA based on Basic Salary<code>BS</code> \n<pre><code>Condition: BS &gt; 2000</code></pre>\n<pre><code>Formula: BS * .1</code></pre></li>\n<li>Calculating TDS based on Employment Type<code>employment_type</code> \n<pre><code>Condition: employment_type==\"Intern\"</code></pre>\n<pre><code>Amount: 1000</code></pre></li>\n</ol>"
+   "options": "<h3>Ayuda</h3>\n<p>Notas:</p>\n<ol><li>Usa el campo <code>base</code> para utilizar el salario base del empleado.</li><li>Usa las abreviaturas de los componentes salariales en condiciones y f\u00f3rmulas. <code>BS = Salario B\u00e1sico</code>.</li><li>Usa el nombre de los campos para los detalles del empleado en condiciones y f\u00f3rmulas. <code>Tipo de Empleo = employment_type</code>, <code>Sucursal = branch</code>.</li><li>Usa el nombre de los campos del recibo de salario en condiciones y f\u00f3rmulas. <code>D\u00edas de Pago = payment_days</code>, <code>Permiso sin sueldo = leave_without_pay</code>.</li><li>Tambi\u00e9n se puede ingresar un monto directo basado en una condici\u00f3n. Ver ejemplo 3.</li></ol>\n<h4>Ejemplos</h4><ol><li>C\u00e1lculo del Salario B\u00e1sico basado en <code>base</code>.<pre><code>Condici\u00f3n: base &lt; 10000</code></pre><pre><code>F\u00f3rmula: base * .2</code></pre></li><li>C\u00e1lculo del HRA basado en Salario B\u00e1sico <code>BS</code>.<pre><code>Condici\u00f3n: BS &gt; 2000</code></pre><pre><code>F\u00f3rmula: BS * .1</code></pre></li><li>C\u00e1lculo del TDS basado en el Tipo de Empleo <code>employment_type</code>.<pre><code>Condici\u00f3n: employment_type==\"Intern\"</code></pre><pre><code>Monto: 1000</code></pre></li></ol>"
   },
   {
    "default": "0",
@@ -268,7 +267,7 @@
  "icon": "fa fa-flag",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-02-02 13:55:55.989527",
+ "modified": "2025-04-07 14:13:01.901808",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Component",
@@ -292,6 +291,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

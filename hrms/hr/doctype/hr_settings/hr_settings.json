@@ -7,7 +7,6 @@
  "engine": "InnoDB",
  "field_order": [
   "employee_settings",
-  "emp_created_by",
   "standard_working_hours",
   "column_break_9",
   "retirement_age",
@@ -63,15 +62,8 @@
   {
    "fieldname": "retirement_age",
    "fieldtype": "Data",
+   "hidden": 1,
    "label": "Retirement Age (In Years)"
-  },
-  {
-   "default": "Naming Series",
-   "description": "Employee records are created using the selected option",
-   "fieldname": "emp_created_by",
-   "fieldtype": "Select",
-   "label": "Employee Naming By",
-   "options": "Naming Series\nEmployee Number\nFull Name"
   },
   {
    "fieldname": "column_break_4",
@@ -165,7 +157,7 @@
    "default": "1",
    "fieldname": "send_work_anniversary_reminders",
    "fieldtype": "Check",
-   "label": "Work Anniversaries "
+   "label": "Work Anniversaries"
   },
   {
    "default": "Weekly",
@@ -342,7 +334,7 @@
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-30 12:41:22.594071",
+ "modified": "2025-04-07 20:43:08.476695",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",
@@ -375,8 +367,18 @@
   {
    "read": 1,
    "role": "Employee"
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "HR Administrator",
+   "share": 1,
+   "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],

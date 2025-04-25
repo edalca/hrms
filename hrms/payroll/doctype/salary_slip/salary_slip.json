@@ -429,6 +429,7 @@
   {
    "fieldname": "section_break_75",
    "fieldtype": "Tab Break",
+   "hidden": 1,
    "label": "Bank Details"
   },
   {
@@ -746,7 +747,7 @@
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-07-01 21:25:36.651583",
+ "modified": "2025-04-06 23:02:08.916163",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
@@ -783,6 +784,7 @@
    "role": "Employee"
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "employee_name",
  "show_name_in_global_search": 1,
  "sort_field": "modified",
