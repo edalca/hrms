@@ -14,7 +14,7 @@
  "hide_custom": 1,
  "icon": "expenses",
  "idx": 0,
- "is_hidden": 0,
+ "is_hidden": 1,
  "label": "Expense Claims",
  "links": [
   {
@@ -256,17 +256,17 @@
    "type": "Link"
   }
  ],
- "modified": "2024-08-11 11:40:45.636550",
+ "modified": "2025-04-26 02:20:42.387180",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Expense Claims",
  "number_cards": [],
  "owner": "Administrator",
- "parent_page": "HR",
+ "parent_page": "RH",
  "public": 1,
  "quick_lists": [],
  "roles": [],
- "sequence_id": 8.0,
+ "sequence_id": 14.0,
  "shortcuts": [
   {
    "color": "Grey",

@@ -27,6 +27,7 @@ app_include_js = [
 ]
 app_include_css = "hrms.bundle.css"
 
+app_include_icons ="hrms/icons/all.svg"
 # website
 
 # include js, css files in header of web template

@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class AcademicDegree(Document):
+class Nationality(Document):
 	pass
