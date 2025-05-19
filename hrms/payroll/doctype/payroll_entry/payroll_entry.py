@@ -166,6 +166,7 @@ class PayrollEntry(Document):
 			currency=self.currency,
 			start_date=self.start_date,
 			end_date=self.end_date,
+   			employment_type=self.employment_type,
 			payroll_payable_account=self.payroll_payable_account,
 			salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
 		)
@@ -1285,7 +1286,7 @@ def set_filter_conditions(query, filters, qb_object):
 	if filters.get("employees"):
 		query = query.where(qb_object.name.notin(filters.get("employees")))
 
-	for fltr_key in ["branch", "department", "designation", "grade"]:
+	for fltr_key in ["branch", "department", "designation", "grade","employment_type"]:
 		if filters.get(fltr_key):
 			query = query.where(qb_object[fltr_key] == filters[fltr_key])
 

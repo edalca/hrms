@@ -8,6 +8,7 @@
  "field_order": [
   "employee_settings",
   "standard_working_hours",
+  "employee_number",
   "column_break_9",
   "retirement_age",
   "reminders_section",
@@ -328,13 +329,18 @@
    "fieldname": "prevent_self_leave_approval",
    "fieldtype": "Check",
    "label": "Prevent self approval for leaves even if user has permissions"
+  },
+  {
+   "fieldname": "employee_number",
+   "fieldtype": "Data",
+   "label": "employee_number"
   }
  ],
  "icon": "fa fa-cog",
  "idx": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-07 20:43:08.476695",
+ "modified": "2025-05-10 17:18:07.300484",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "HR Settings",

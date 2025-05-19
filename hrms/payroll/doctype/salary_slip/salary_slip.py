@@ -79,7 +79,20 @@ class SalarySlip(TransactionBase):
 			"get_last_day": get_last_day,
 			"ceil": ceil,
 			"floor": floor,
+			"date_diff": date_diff,
+			"min" : lambda a, b: a if a < b else b,
+			"bonus": self.calculate_bonus,
 		}
+	def calculate_bonus(self, start_date, end_date, days, amount):
+		# Convertir fechas a formato correcto
+		start_date = getdate(start_date)
+		end_date = getdate(end_date)
+		
+		# Calcular la diferencia de días y asegurarse de que nunca sea negativa
+		worked_days = min(abs(date_diff(start_date, end_date)), days)
+		
+		# Calcular aguinaldo ajustado
+		return amount * (worked_days / days)
 
 	def autoname(self):
 		self.name = make_autoname(self.series)

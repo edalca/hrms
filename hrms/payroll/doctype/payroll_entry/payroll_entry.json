@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "select_payroll_period",
+  "description",
   "posting_date",
   "company",
   "column_break_5",
@@ -27,6 +28,7 @@
   "section_break_17",
   "branch",
   "department",
+  "employment_type",
   "column_break_21",
   "designation",
   "grade",
@@ -330,12 +332,25 @@
    "fieldtype": "Link",
    "label": "Grade",
    "options": "Employee Grade"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "label": "Description",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employment_type",
+   "fieldtype": "Link",
+   "label": "Employment Type",
+   "options": "Employment Type"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 15:27:16.652848",
+ "modified": "2025-05-12 16:27:57.548833",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
@@ -354,7 +369,9 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "description"
 }

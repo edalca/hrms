@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_import": 1,
+ "allow_rename": 1,
  "autoname": "field:nationality",
  "creation": "2025-04-24 10:51:26.403268",
  "doctype": "DocType",
@@ -21,7 +22,7 @@
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-25 11:22:59.871819",
+ "modified": "2025-05-09 15:14:56.972175",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Nationality",

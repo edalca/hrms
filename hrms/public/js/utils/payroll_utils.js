@@ -1,3 +1,9 @@
+const global_variables = [
+	"int", "float", "long", "round", "rounded",
+	"date", "getdate", "get_first_day", "get_last_day",
+	"ceil", "floor","date_diff","min","bonus(start_date, end_date, days, amount)"
+];
+
 hrms.payroll_utils = {
 	set_autocompletions_for_condition_and_formula: function (frm, child_row = "") {
 		const autocompletions = [];
@@ -10,6 +16,15 @@ hrms.payroll_utils = {
 						);
 					}),
 			),
+			() => {
+				global_variables.forEach((variable) => {
+					autocompletions.push({
+						value: variable,
+						score: 10,  // Prioridad alta en autocompletación
+						meta: __("Global Variable"),
+					});
+				})
+			},
 			() => {
 				frappe.db
 					.get_list("Salary Component", {

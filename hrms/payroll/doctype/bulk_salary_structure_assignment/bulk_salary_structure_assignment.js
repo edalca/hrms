@@ -177,6 +177,7 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 			{
 				name: "base",
 				id: "base",
+				reqd: 1,
 				content: __("Base"),
 			},
 			{
@@ -256,11 +257,19 @@ frappe.ui.form.on("Bulk Salary Structure Assignment", {
 
 		hrms.validate_mandatory_fields(frm, checked_rows_content);
 		if (employees_with_base_zero.length)
-			return frm.events.validate_base_zero(
+			return frappe.msgprint({
+				title:__("Validation Error"),
+				message:__("<b>Base</b> amount has not been set for the following employee(s): {0}", [
+					employees_with_base_zero.join(", "),
+				]),
+				indicator:'red'
+			}, 5);
+			/*return frm.events.validate_base_zero(
 				frm,
 				employees_with_base_zero,
 				checked_rows_content,
-			);
+			);*/
+			
 
 		return frm.events.show_confirm_dialog(frm, checked_rows_content);
 	},

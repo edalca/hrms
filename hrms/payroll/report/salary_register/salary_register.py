@@ -36,11 +36,14 @@ def execute(filters=None):
 
 	data = []
 	for ss in salary_slips:
+		doj_info = doj_map.get(ss.employee, {})
 		row = {
 			"salary_slip_id": ss.name,
 			"employee": ss.employee,
 			"employee_name": ss.employee_name,
-			"data_of_joining": doj_map.get(ss.employee),
+			"data_of_joining": doj_info.get("date_of_joining"),
+			"dpi": doj_info.get("dpi"),
+			"tax_identification_number": doj_info.get("tax_identification_number"),
 			"branch": ss.branch,
 			"department": ss.department,
 			"designation": ss.designation,
@@ -143,6 +146,18 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Department",
 			"width": -1,
+		},
+		{
+			"label": _("DPI"),
+			"fieldname": "dpi",
+			"fieldtype": "Data",
+			"width": 120,
+		},
+			{
+			"label": _("Tax Identification Number"),
+			"fieldname": "tax_identification_number",
+			"fieldtype": "Data",
+			"width": 120,
 		},
 		{
 			"label": _("Designation"),
@@ -299,11 +314,14 @@ def get_salary_slips(filters, company_currency):
 
 
 def get_employee_doj_map():
-	employee = frappe.qb.DocType("Employee")
+    employee = frappe.qb.DocType("Employee")
 
-	result = (frappe.qb.from_(employee).select(employee.name, employee.date_of_joining)).run()
+    result = frappe.qb.from_(employee).select(
+        employee.name, employee.date_of_joining, employee.dpi, employee.tax_identification_number
+    ).run()
 
-	return frappe._dict(result)
+    # Convertir la lista de tuplas en un diccionario con tres valores por empleado
+    return {row[0]: {"date_of_joining": row[1], "dpi": row[2], "tax_identification_number": row[3]} for row in result}
 
 
 def get_salary_slip_details(salary_slips, currency, company_currency, component_type):

@@ -18,49 +18,77 @@ from hrms.hr.utils import get_holiday_dates_for_employee
 class UploadAttendance(Document):
 	pass
 
-
 @frappe.whitelist()
 def get_template():
-	if not frappe.has_permission("Attendance", "create"):
-		raise frappe.PermissionError
+    if not frappe.has_permission("Attendance", "create"):
+        raise frappe.PermissionError
+    from frappe.utils.xlsxutils import make_xlsx
+    from frappe.desk.utils import provide_binary_file
+    args = frappe.local.form_dict
 
-	args = frappe.local.form_dict
+    if getdate(args.from_date) > getdate(args.to_date):
+        frappe.throw(_("To Date should be greater than From Date"))
 
-	if getdate(args.from_date) > getdate(args.to_date):
-		frappe.throw(_("To Date should be greater than From Date"))
+    try:
+        # Crear datos para el archivo XLS
+        data = []
+        data = add_header(data)
+        data = add_data(data, args)
 
-	w = UnicodeWriter()
-	w = add_header(w)
+        # Depuración: Verificar si data tiene contenido
+        if not data:
+            frappe.log_error("Data está vacío en get_template", "Debug XLS")
+            frappe.throw(_("No se generaron datos para el archivo XLS. Verifique las fechas y empleados activos."))
 
-	try:
-		w = add_data(w, args)
-	except Exception as e:
-		frappe.clear_messages()
-		frappe.respond_as_web_page("Holiday List Missing", html=e)
-		return
+        # Log limitado para evitar CharacterLengthExceededError
+        log_message = f"Data contiene {len(data)} filas. Primera fila: {str(data[0])[:50]}..."
+        frappe.log_error(log_message, "Debug XLS")
 
-	# write out response as a type csv
-	frappe.response["result"] = cstr(w.getvalue())
-	frappe.response["type"] = "csv"
-	frappe.response["doctype"] = "Attendance"
+        # Log adicional para verificar datos enviados a make_xlsx
+        log_message_make = f"Primeras 2 filas a make_xlsx: {str(data[:2])[:100]}..."
+        frappe.log_error(log_message_make, "Debug XLS")
 
+        # Depuración: Mostrar primeras 5 filas individualmente
+        for i, row in enumerate(data[:5]):
+            frappe.log_error(f"Fila {i + 1}: {str(row)[:100]}...", "Debug XLS Data")
 
-def add_header(w):
-	status = ", ".join((frappe.get_meta("Attendance").get_field("status").options or "").strip().split("\n"))
-	w.writerow(["Notes:"])
-	w.writerow(["Please do not change the template headings"])
-	w.writerow(["Status should be one of these values: " + status])
-	w.writerow(["If you are overwriting existing attendance records, 'ID' column mandatory"])
-	w.writerow(
-		["ID", "Employee", "Employee Name", "Date", "Status", "Leave Type", "Company", "Naming Series"]
-	)
-	return w
+        # Generar archivo XLSX
+        xlsx_file = make_xlsx(data, "Attendance")
 
+        # Depuración: Verificar tamaño del archivo
+        xlsx_content = xlsx_file.getvalue()
+        log_message_size = f"Tamaño del archivo XLSX: {len(xlsx_content)} bytes"
+        frappe.log_error(log_message_size, "Debug XLS")
 
-def add_data(w, args):
-	data = get_data(args)
-	writedata(w, data)
-	return w
+        # Usar provide_binary_file para descargar el archivo
+        provide_binary_file(_("Attendance"), "xlsx", xlsx_content)
+
+    except Exception as e:
+        frappe.log_error(f"Error al generar XLSX: {str(e)[:100]}...", "Debug XLS")
+        frappe.throw(_("Error al generar el archivo XLSX: {}".format(str(e))))
+
+def add_header(data):
+    status = ", ".join((frappe.get_meta("Attendance").get_field("status").options or "").strip().split("\n"))
+    data.append([_("Notes:")])
+    data.append([_("Please do not change the template headings")])
+    data.append([_("Status should be one of these values: {0}").format(status)])
+    data.append([_("If you are overwriting existing attendance records, 'ID' column mandatory")])
+    data.append(
+        [
+            _("ID"),
+            _("Employee"),
+            _("Employee Name"),
+            _("Date"),
+            _("Status"),
+            _("Leave Type"),
+        ]
+    )
+    return data
+
+def add_data(data, args):
+    rows = get_data(args)
+    data.extend(rows)  # Agregar las filas de datos a la lista
+    return data
 
 
 def get_data(args):
@@ -96,8 +124,6 @@ def get_data(args):
 				date,
 				existing_attendance and existing_attendance.status or "",
 				existing_attendance and existing_attendance.leave_type or "",
-				employee.company,
-				existing_attendance and existing_attendance.naming_series or get_naming_series(),
 			]
 			if date in holidays[employee_holiday_list]:
 				row[4] = "Holiday"
@@ -162,15 +188,17 @@ def get_naming_series():
 
 @frappe.whitelist()
 def upload():
-	if not frappe.has_permission("Attendance", "create"):
-		raise frappe.PermissionError
+    if not frappe.has_permission("Attendance", "create"):
+        raise frappe.PermissionError
 
-	from frappe.utils.csvutils import read_csv_content
+    from frappe.utils.xlsxutils import read_xlsx_file_from_attached_file
 
-	rows = read_csv_content(frappe.local.uploaded_file)
-	if not rows:
-		frappe.throw(_("Please select a csv file"))
-	frappe.enqueue(import_attendances, rows=rows, now=True if len(rows) < 200 else False)
+    rows = read_xlsx_file_from_attached_file(fcontent=frappe.local.uploaded_file)  
+    rows_str = str(rows)
+    if not rows:
+        frappe.throw(_("El archivo está vacío o tiene un formato incorrecto"))
+
+    frappe.enqueue(import_attendances, rows=rows, now=True if len(rows) < 200 else False)
 
 
 def import_attendances(rows):
@@ -183,7 +211,12 @@ def import_attendances(rows):
 	rows = list(filter(lambda x: x and any(x), rows))
 	columns = [scrub(f) for f in rows[4]]
 	columns[0] = "name"
+	columns[1] = "employee"
+	columns[2] = "employee_name"
 	columns[3] = "attendance_date"
+	columns[4] = "status"
+	columns[5] = "leave_type"
+ 
 	rows = rows[5:]
 	ret = []
 	error = False
@@ -207,11 +240,13 @@ def import_attendances(rows):
 			ret.append(import_doc(d, "Attendance", 1, row_idx, submit=True))
 			frappe.publish_realtime("import_attendance", dict(progress=i, total=len(rows)))
 		except AttributeError:
+			frappe.errprint(frappe.get_traceback())
 			pass
 		except Exception as e:
 			error = True
 			ret.append("Error for row (#%d) %s : %s" % (row_idx, len(row) > 1 and row[1] or "", cstr(e)))
 			frappe.errprint(frappe.get_traceback())
+   
 
 	if error:
 		frappe.db.rollback()

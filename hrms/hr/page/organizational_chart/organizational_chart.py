@@ -3,11 +3,13 @@ from frappe.query_builder.functions import Count
 
 
 @frappe.whitelist()
-def get_children(parent=None, company=None, exclude_node=None):
+def get_children(parent=None, company=None,department=None, exclude_node=None):
 	filters = [["status", "=", "Active"]]
 	if company and company != "All Companies":
 		filters.append(["company", "=", company])
-
+	if department:
+		filters.append(["department", "=", department])
+  
 	if parent and company and parent != company:
 		filters.append(["reports_to", "=", parent])
 	else:
