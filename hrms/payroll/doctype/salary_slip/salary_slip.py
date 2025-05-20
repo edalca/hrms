@@ -87,10 +87,10 @@ class SalarySlip(TransactionBase):
 		# Convertir fechas a formato correcto
 		start_date = getdate(start_date)
 		end_date = getdate(end_date)
-		
+
 		# Calcular la diferencia de días y asegurarse de que nunca sea negativa
 		worked_days = min(abs(date_diff(start_date, end_date)), days)
-		
+
 		# Calcular aguinaldo ajustado
 		return amount * (worked_days / days)
 
@@ -1330,15 +1330,15 @@ class SalarySlip(TransactionBase):
 				d.salary_component for d in self.get("deductions") if d.variable_based_on_taxable_salary
 			]
 
-		if self.is_new() and not tax_components:
-			tax_components = self.get_tax_components()
-			frappe.msgprint(
-				_(
-					"Added tax components from the Salary Component master as the salary structure didn't have any tax component."
-				),
-				indicator="blue",
-				alert=True,
-			)
+		#if self.is_new() and not tax_components:
+		#	tax_components = self.get_tax_components()
+		#	frappe.msgprint(
+		#		_(
+		#			"Added tax components from the Salary Component master as the salary structure didn't have any tax component."
+		#		),
+		#		indicator="blue",
+		#		alert=True,
+		#	)
 
 		if tax_components and self.payroll_period and self.salary_structure:
 			self.tax_slab = self.get_income_tax_slabs()
