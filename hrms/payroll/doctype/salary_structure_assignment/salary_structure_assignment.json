@@ -27,8 +27,9 @@
   "amended_from",
   "opening_balances_section",
   "taxable_earnings_till_date",
-  "column_break_20",
+  "taxable_deductions_till_date",
   "tax_deducted_till_date",
+  "column_break_20",
   "section_break_17",
   "payroll_cost_centers"
  ],
@@ -186,7 +187,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "allow_on_submit": 1,
    "fieldname": "tax_deducted_till_date",
    "fieldtype": "Currency",
    "label": "Tax Deducted Till Date",
@@ -210,11 +210,17 @@
    "fieldtype": "Section Break",
    "hidden": 1,
    "label": "Opening Balances"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "taxable_deductions_till_date",
+   "fieldtype": "Currency",
+   "label": "Taxable Deductions Till Date"
   }
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-28 16:15:41.188297",
+ "modified": "2025-05-20 22:45:27.191858",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

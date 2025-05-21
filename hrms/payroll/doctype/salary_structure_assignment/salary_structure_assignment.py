@@ -151,6 +151,7 @@ class SalaryStructureAssignment(Document):
 		if (
 			self.are_opening_entries_required()
 			and not self.taxable_earnings_till_date
+			and not self.taxable_deductions_till_date
 			and not self.tax_deducted_till_date
 		):
 			msg = _("Could not find any salary slip(s) for the employee {0}").format(self.employee)
@@ -159,6 +160,7 @@ class SalaryStructureAssignment(Document):
 				"Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips."
 			).format(
 				frappe.bold(_("Taxable Earnings Till Date")),
+				frappe.bold(_("Taxable Deductions Till Date")),
 				frappe.bold(_("Tax Deducted Till Date")),
 			)
 			frappe.msgprint(

@@ -82,8 +82,9 @@
   "ctc",
   "income_from_other_sources",
   "total_earnings",
-  "column_break_0rsw",
   "non_taxable_earnings",
+  "column_break_0rsw",
+  "taxable_deductions_till_date",
   "standard_tax_exemption_amount",
   "tax_exemption_declaration",
   "deductions_before_tax_calculation",
@@ -741,13 +742,19 @@
    "no_copy": 1,
    "print_hide": 1,
    "read_only": 1
+  },
+  {
+   "fieldname": "taxable_deductions_till_date",
+   "fieldtype": "Currency",
+   "label": "Taxable Deductions Till Date",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-06 23:02:08.916163",
+ "modified": "2025-05-20 22:32:32.244506",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

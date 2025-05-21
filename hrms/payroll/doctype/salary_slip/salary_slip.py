@@ -921,7 +921,7 @@ class SalarySlip(TransactionBase):
 	def compute_income_tax_breakup(self):
 		if not self.payroll_period:
 			return
-
+		self.taxable_deductions_till_date=0
 		self.standard_tax_exemption_amount = 0
 		self.tax_exemption_declaration = 0
 		self.deductions_before_tax_calculation = 0
@@ -929,6 +929,8 @@ class SalarySlip(TransactionBase):
 		self.non_taxable_earnings = self.compute_non_taxable_earnings()
 
 		self.ctc = self.compute_ctc()
+		self.taxable_deductions_till_date = self.get_opening_for("taxable_deductions_till_date", self.payroll_period.start_date,self.start_date)
+
 
 		self.income_from_other_sources = self.get_income_form_other_sources()
 
@@ -950,6 +952,7 @@ class SalarySlip(TransactionBase):
 			+ self.deductions_before_tax_calculation
 			+ self.tax_exemption_declaration
 			+ self.standard_tax_exemption_amount
+			+ self.taxable_deductions_till_date
 		)
 
 		self.income_tax_deducted_till_date = self.get_income_tax_deducted_till_date()
