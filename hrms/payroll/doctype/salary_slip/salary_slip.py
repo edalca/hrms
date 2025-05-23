@@ -877,8 +877,8 @@ class SalarySlip(TransactionBase):
 			+ self.other_incomes
 			+ self.unclaimed_taxable_benefits
 			- self.total_exemption_amount
+			- self.taxable_deductions_till_date
 		)
-
 		# Total taxable earnings without additional earnings with full tax
 		self.total_taxable_earnings_without_full_tax_addl_components = (
 			self.total_taxable_earnings - self.current_additional_earnings_with_full_tax
