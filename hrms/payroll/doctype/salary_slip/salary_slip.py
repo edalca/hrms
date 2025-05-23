@@ -2171,6 +2171,7 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 	eval_locals.update({"annual_taxable_earning": annual_taxable_earning})
 	tax_amount = 0
 	other_taxes_and_charges = 0
+	amount_previusly_taxed = 0
 
 	for slab in tax_slab.slabs:
 		cond = cstr(slab.condition).strip()
@@ -2181,9 +2182,11 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 			continue
 
 		if annual_taxable_earning >= slab.from_amount and annual_taxable_earning < slab.to_amount:
-			tax_amount += (annual_taxable_earning - slab.from_amount + 1) * slab.percent_deduction * 0.01
+			tax_amount += (annual_taxable_earning - amount_previusly_taxed) * slab.percent_deduction * 0.01
+			amount_previusly_taxed = slab.to_amount
 		elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
-			tax_amount += (slab.to_amount - slab.from_amount + 1) * slab.percent_deduction * 0.01
+			tax_amount += (slab.to_amount -amount_previusly_taxed) * slab.percent_deduction * 0.01
+			amount_previusly_taxed = slab.from_amount
 
 	for d in tax_slab.other_taxes_and_charges:
 		if flt(d.min_taxable_income) and flt(d.min_taxable_income) > annual_taxable_earning:
