@@ -865,6 +865,7 @@ class SalarySlip(TransactionBase):
 		# Total exemption amount based on tax exemption declaration
 		self.total_exemption_amount = self.get_total_exemption_amount()
 
+
 		# Employee Other Incomes
 		self.other_incomes = self.get_income_form_other_sources() or 0.0
 
@@ -877,7 +878,7 @@ class SalarySlip(TransactionBase):
 			+ self.other_incomes
 			+ self.unclaimed_taxable_benefits
 			- self.total_exemption_amount
-			- self.taxable_deductions_till_date
+			- self.taxable_deductions_till_date or 0
 		)
 		# Total taxable earnings without additional earnings with full tax
 		self.total_taxable_earnings_without_full_tax_addl_components = (
