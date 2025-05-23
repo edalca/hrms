@@ -2,6 +2,7 @@
 # License: GNU General Public License v3. See license.txt
 
 
+from typing_extensions import FrozenSet
 import unicodedata
 from datetime import date
 
@@ -865,6 +866,7 @@ class SalarySlip(TransactionBase):
 		# Total exemption amount based on tax exemption declaration
 		self.total_exemption_amount = self.get_total_exemption_amount()
 
+		self.taxable_deductions_till_date = self.get_opening_for("taxable_deductions_till_date", self.payroll_period.start_date,self.start_date)
 
 		# Employee Other Incomes
 		self.other_incomes = self.get_income_form_other_sources() or 0.0
@@ -872,14 +874,15 @@ class SalarySlip(TransactionBase):
 		# Total taxable earnings including additional and other incomes
 		self.total_taxable_earnings = (
 			self.previous_taxable_earnings
-			+ self.current_structured_taxable_earnings
+ 			+ self.current_structured_taxable_earnings
 			+ self.future_structured_taxable_earnings
 			+ self.current_additional_earnings
 			+ self.other_incomes
 			+ self.unclaimed_taxable_benefits
 			- self.total_exemption_amount
-			- self.taxable_deductions_till_date or 0
+			- self.taxable_deductions_till_date
 		)
+
 		# Total taxable earnings without additional earnings with full tax
 		self.total_taxable_earnings_without_full_tax_addl_components = (
 			self.total_taxable_earnings - self.current_additional_earnings_with_full_tax
