@@ -54,8 +54,12 @@
   "base_hour_rate",
   "earning_deduction_sb",
   "earnings",
-  "column_break_k1jz",
+  "column_break_cnbd",
   "deductions",
+  "section_break_pmbt",
+  "earnings_statistical",
+  "column_break_kfvn",
+  "deductions_stadistical",
   "totals",
   "gross_pay",
   "base_gross_pay",
@@ -698,10 +702,6 @@
    "label": "Payment Days"
   },
   {
-   "fieldname": "column_break_k1jz",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "column_break_wyhp",
    "fieldtype": "Column Break"
   },
@@ -748,13 +748,41 @@
    "fieldtype": "Currency",
    "label": "Taxable Deductions Till Date",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cnbd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_pmbt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "earnings_statistical",
+   "fieldtype": "Table",
+   "label": "Statistical Earnings",
+   "options": "Salary Detail",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_kfvn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "deductions_stadistical",
+   "fieldtype": "Table",
+   "label": "Statistical Deductions",
+   "oldfieldname": "deduction_details",
+   "oldfieldtype": "Table",
+   "options": "Salary Detail",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-20 22:32:32.244506",
+ "modified": "2025-05-28 14:44:01.835398",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

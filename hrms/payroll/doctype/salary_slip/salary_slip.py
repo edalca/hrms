@@ -1147,41 +1147,56 @@ class SalarySlip(TransactionBase):
 			self.add_structure_component(struct_row, component_type)
 
 	def add_structure_component(self, struct_row, component_type):
-		if (
-			self.salary_slip_based_on_timesheet
-			and struct_row.salary_component == self._salary_structure_doc.salary_component
-		):
-			return
-
 		amount = self.eval_condition_and_formula(struct_row, self.data)
-		if struct_row.statistical_component:
-			# update statitical component amount in reference data based on payment days
-			# since row for statistical component is not added to salary slip
+		remove_if_zero_valued = frappe.get_cached_value(
+			"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
+		)
+		default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 
-			self.default_data[struct_row.abbr] = flt(amount)
-			if struct_row.depends_on_payment_days:
-				payment_days_amount = (
-					flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
-					if self.total_working_days
-					else 0
-				)
-				self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
-
-		else:
-			# default behavior, the system does not add if component amount is zero
-			# if remove_if_zero_valued is unchecked, then ask system to add component row
-			remove_if_zero_valued = frappe.get_cached_value(
-				"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
+		# Determinar si es un componente estadístico
+		is_statistical = struct_row.statistical_component
+		if is_statistical:
+			frappe.msgprint(str(default_amount))
+		# Actualizar datos para cálculos futuros
+		self.default_data[struct_row.abbr] = flt(amount)
+		if struct_row.depends_on_payment_days:
+			payment_days_amount = (
+				flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
+				if self.total_working_days
+				else 0
 			)
+			self.data[struct_row.abbr] = flt(payment_days_amount, struct_row.precision("amount"))
+		else:
+			self.data[struct_row.abbr] = flt(amount, struct_row.precision("amount"))
 
-			default_amount = 0
+		# Si es un componente estadístico, añadirlo a la tabla correspondiente
+		if is_statistical:
+			target_table = "earnings_statistical" if component_type == "earnings" else "deductions_statistical"
+			if not (amount or default_amount) and remove_if_zero_valued:
+				return
 
+			component_row = self.append(target_table, {})
+			for attr in (
+				"salary_component",
+				"abbr",
+				"do_not_include_in_total",
+				"is_tax_applicable",
+				"is_flexible_benefit",
+				"variable_based_on_taxable_salary",
+				"exempted_from_income_tax",
+			):
+				component_row.set(attr, struct_row.get(attr))
+
+			component_row.amount = amount
+			component_row.default_amount = default_amount or amount
+			component_row.additional_amount = 0
+		else:
+			# Comportamiento original para componentes no estadísticos
 			if (
 				amount
 				or (struct_row.amount_based_on_formula and amount is not None)
 				or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
 			):
-				default_amount = self.eval_condition_and_formula(struct_row, self.default_data)
 				self.update_component_row(
 					struct_row,
 					amount,

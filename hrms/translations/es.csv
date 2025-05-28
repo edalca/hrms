@@ -1025,3 +1025,6 @@ Could not find any salary slip(s) for the employee {0},No se pudo encontrar ning
 "Please specify {0} and {1} (if any), for the correct tax calculation in future salary slips","Por favor especifique {0} y {1} (si corresponde), para el cálculo correcto de impuestos en futuras nóminas",
 Missing Opening Entries,Entradas de apertura faltantes,
 Current Month Income Tax,Impuesto sobre la renta del mes actual,
+Accounting & Payment,Contabilidad y Pago,
+Statistical Earnings,Ingresos Estadísticos,
+Statistical Deductions,Deducciones Estadísticas,
