@@ -1155,8 +1155,6 @@ class SalarySlip(TransactionBase):
 
 		# Determinar si es un componente estadístico
 		is_statistical = struct_row.statistical_component
-		if is_statistical:
-			frappe.msgprint(str(default_amount))
 		# Actualizar datos para cálculos futuros
 		self.default_data[struct_row.abbr] = flt(amount)
 		if struct_row.depends_on_payment_days:
