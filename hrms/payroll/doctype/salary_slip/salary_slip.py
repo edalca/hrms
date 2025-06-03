@@ -1155,8 +1155,10 @@ class SalarySlip(TransactionBase):
 
 		# Determinar si es un componente estadístico
 		is_statistical = struct_row.statistical_component
+
 		# Actualizar datos para cálculos futuros
 		self.default_data[struct_row.abbr] = flt(amount)
+
 		if struct_row.depends_on_payment_days:
 			payment_days_amount = (
 				flt(amount) * flt(self.payment_days) / cint(self.total_working_days)
@@ -1167,27 +1169,41 @@ class SalarySlip(TransactionBase):
 		else:
 			self.data[struct_row.abbr] = flt(amount, struct_row.precision("amount"))
 
-		# Si es un componente estadístico, añadirlo a la tabla correspondiente
+		# Si es un componente estadístico, sobrescribir en la tabla correspondiente en lugar de duplicarlo
 		if is_statistical:
 			target_table = "earnings_statistical" if component_type == "earnings" else "deductions_statistical"
-			if not (amount or default_amount) and remove_if_zero_valued:
-				return
 
-			component_row = self.append(target_table, {})
-			for attr in (
-				"salary_component",
-				"abbr",
-				"do_not_include_in_total",
-				"is_tax_applicable",
-				"is_flexible_benefit",
-				"variable_based_on_taxable_salary",
-				"exempted_from_income_tax",
-			):
-				component_row.set(attr, struct_row.get(attr))
+			# Buscar si el componente ya existe en la tabla
+			existing_component = next(
+				(row for row in self.get(target_table) if row.salary_component == struct_row.salary_component),
+				None
+			)
 
-			component_row.amount = amount
-			component_row.default_amount = default_amount or amount
-			component_row.additional_amount = 0
+			if existing_component:
+				# Si ya existe, sobrescribir valores
+				existing_component.amount = amount
+				existing_component.default_amount = default_amount or amount
+				existing_component.additional_amount = 0
+			else:
+				# Si no existe, agregarlo como nuevo
+				if not (amount or default_amount) and remove_if_zero_valued:
+					return
+
+				component_row = self.append(target_table, {})
+				for attr in (
+					"salary_component",
+					"abbr",
+					"do_not_include_in_total",
+					"is_tax_applicable",
+					"is_flexible_benefit",
+					"variable_based_on_taxable_salary",
+					"exempted_from_income_tax",
+				):
+					component_row.set(attr, struct_row.get(attr))
+
+				component_row.amount = amount
+				component_row.default_amount = default_amount or amount
+				component_row.additional_amount = 0
 		else:
 			# Comportamiento original para componentes no estadísticos
 			if (
