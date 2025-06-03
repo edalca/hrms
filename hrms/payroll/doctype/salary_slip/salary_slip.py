@@ -1147,10 +1147,6 @@ class SalarySlip(TransactionBase):
 			self.add_structure_component(struct_row, component_type)
 
 	def add_structure_component(self, struct_row, component_type):
-		# Limpiar ambas tablas antes de agregar nuevos componentes estadísticos
-		self.set("earnings_statistical", [])
-		self.set("deductions_statistical", [])
-
 		amount = self.eval_condition_and_formula(struct_row, self.data)
 		remove_if_zero_valued = frappe.get_cached_value(
 			"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
@@ -1173,12 +1169,15 @@ class SalarySlip(TransactionBase):
 		else:
 			self.data[struct_row.abbr] = flt(amount, struct_row.precision("amount"))
 
-		# Agregar componentes estadísticos después de limpiar las tablas
+		# Si es un componente estadístico, limpiar las tablas antes de agregar nuevos componentes
 		if is_statistical:
 			target_table = "earnings_statistical" if component_type == "earnings" else "deductions_statistical"
 
 			if not (amount or default_amount) and remove_if_zero_valued:
 				return
+
+			# Ahora se eliminan los componentes *justo antes* de agregar los nuevos
+			self.set(target_table, [])
 
 			component_row = self.append(target_table, {})
 			for attr in (
@@ -1210,7 +1209,6 @@ class SalarySlip(TransactionBase):
 					default_amount=default_amount,
 					remove_if_zero_valued=remove_if_zero_valued,
 				)
-
 	def get_data_for_eval(self):
 		"""Returns data for evaluating formula"""
 		data = frappe._dict()
