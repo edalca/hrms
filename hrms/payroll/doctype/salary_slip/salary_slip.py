@@ -1147,12 +1147,6 @@ class SalarySlip(TransactionBase):
 			self.add_structure_component(struct_row, component_type)
 
 	def add_structure_component(self, struct_row, component_type):
-		# Limpiar las tablas **una sola vez** al inicio, antes de agregar nuevos componentes
-		if not hasattr(self, "_cleared_statistical_tables"):
-			self.set("earnings_statistical", [])
-			self.set("deductions_statistical", [])
-			self._cleared_statistical_tables = True  # Bandera para evitar repetir la limpieza
-
 		amount = self.eval_condition_and_formula(struct_row, self.data)
 		remove_if_zero_valued = frappe.get_cached_value(
 			"Salary Component", struct_row.salary_component, "remove_if_zero_valued"
@@ -1175,44 +1169,27 @@ class SalarySlip(TransactionBase):
 		else:
 			self.data[struct_row.abbr] = flt(amount, struct_row.precision("amount"))
 
-		# Agregar componentes estadísticos después de limpiar las tablas
+		# Usar `update_component_row` para manejar componentes estadísticos
 		if is_statistical:
 			target_table = "earnings_statistical" if component_type == "earnings" else "deductions_statistical"
 
-			if not (amount or default_amount) and remove_if_zero_valued:
-				return
-
-			component_row = self.append(target_table, {})
-			for attr in (
-				"salary_component",
-				"abbr",
-				"do_not_include_in_total",
-				"is_tax_applicable",
-				"is_flexible_benefit",
-				"variable_based_on_taxable_salary",
-				"exempted_from_income_tax",
-			):
-				component_row.set(attr, struct_row.get(attr))
-
-			component_row.amount = amount
-			component_row.default_amount = default_amount or amount
-			component_row.additional_amount = 0
+			self.update_component_row(
+				struct_row,
+				amount,
+				target_table,
+				default_amount=default_amount,
+				remove_if_zero_valued=remove_if_zero_valued
+			)
 		else:
 			# Comportamiento original para componentes no estadísticos
-			if (
-				amount
-				or (struct_row.amount_based_on_formula and amount is not None)
-				or (not remove_if_zero_valued and amount is not None and not self.data[struct_row.abbr])
-			):
-				self.update_component_row(
-					struct_row,
-					amount,
-					component_type,
-					data=self.data,
-					default_amount=default_amount,
-					remove_if_zero_valued=remove_if_zero_valued,
-				)
-
+			self.update_component_row(
+				struct_row,
+				amount,
+				component_type,
+				data=self.data,
+				default_amount=default_amount,
+				remove_if_zero_valued=remove_if_zero_valued
+			)
 
 
 	def get_data_for_eval(self):
