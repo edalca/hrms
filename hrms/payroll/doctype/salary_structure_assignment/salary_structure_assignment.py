@@ -205,6 +205,24 @@ def get_employee_currency(employee):
 		)
 	return employee_currency
 
+@frappe.whitelist()
+def get_employee_salary_structure_components(employee):
+    # Obtener el Salary Structure asignado al empleado
+    salary_structure = frappe.db.get_value("Salary Structure Assignment", {"employee": employee}, "salary_structure")
+
+    if not salary_structure:
+        frappe.throw(_("No Salary Structure found for {0}.").format(employee))
+
+    # Obtener todos los componentes de earnings y deductions
+    components = frappe.get_all(
+        "Salary Detail",
+        filters={"parent": salary_structure},
+        fields=["salary_component"]
+    )
+
+    # Convertir a una lista de nombres de componentes
+    return [comp["salary_component"] for comp in components]
+
 
 def get_tax_component(salary_structure: str) -> str | None:
 	salary_structure = frappe.get_cached_doc("Salary Structure", salary_structure)

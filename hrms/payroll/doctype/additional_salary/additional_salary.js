@@ -27,9 +27,11 @@ frappe.ui.form.on("Additional Salary", {
 
 	employee: function (frm) {
 		if (frm.doc.employee) {
+			frm.set_value("salary_component", null)
 			frappe.run_serially([
 				() => frm.trigger("get_employee_currency"),
 				() => frm.trigger("set_company"),
+				() => frm.trigger("set_component_query"),
 			]);
 		} else {
 			frm.set_value("company", null);
@@ -61,15 +63,7 @@ frappe.ui.form.on("Additional Salary", {
 
 	set_component_query: function (frm) {
 		if (!frm.doc.company) return;
-		let filters = { company: frm.doc.company };
-		if (frm.doc.type) {
-			filters.type = frm.doc.type;
-		}
-		frm.set_query("salary_component", function () {
-			return {
-				filters: filters,
-			};
-		});
+		frm.trigger("get_employee_components");
 	},
 
 	get_employee_currency: function (frm) {
@@ -87,13 +81,49 @@ frappe.ui.form.on("Additional Salary", {
 		});
 	},
 
-	salary_component: function (frm) {
-		if (!frm.doc.ref_doctype) {
-			frm.trigger("get_salary_component_amount");
+	get_employee_components: function (frm) {
+		if (!frm.doc.employee) {
+			return;
 		}
+		frappe.call({
+			method: "hrms.payroll.doctype.salary_structure_assignment.salary_structure_assignment.get_employee_salary_structure_components",
+			args: {
+				employee: frm.doc.employee,
+			},
+			callback: function (r) {
+				if (r.message) {
+					let filters = {
+						company: frm.doc.company,
+						salary_component: ["not in", r.message]
+					};
+
+					frm.set_query("salary_component", function () {
+						return {
+							filters: filters,
+						};
+					});
+				}
+			},
+		});
+	},
+
+	salary_component: function (frm) {
+		if (!frm.doc.employee) {
+			frm.set_value("salary_component", null);
+			frm.refresh_fields();
+			frappe.msgprint(__("Please select an Employee first"));
+			return;
+		}
+		frm.trigger("get_salary_component_amount");
 	},
 
 	get_salary_component_amount: function (frm) {
+		if (!frm.doc.salary_component) {
+			frm.set_value("amount", null);
+			frm.set_value("currency", null);
+			frm.refresh_fields();
+			return;
+		}
 		frappe.call({
 			method: "frappe.client.get_value",
 			args: {
