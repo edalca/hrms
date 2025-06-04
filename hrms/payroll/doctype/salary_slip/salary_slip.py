@@ -929,6 +929,7 @@ class SalarySlip(TransactionBase):
 		self.standard_tax_exemption_amount = 0
 		self.tax_exemption_declaration = 0
 		self.deductions_before_tax_calculation = 0
+		self.taxable_earnings = 0
 
 		self.non_taxable_earnings = self.compute_non_taxable_earnings()
 
@@ -939,6 +940,8 @@ class SalarySlip(TransactionBase):
 		self.income_from_other_sources = self.get_income_form_other_sources()
 
 		self.total_earnings = self.ctc + self.income_from_other_sources
+
+		self.taxable_earnings = self.total_earnings - self.non_taxable_earnings
 
 		if hasattr(self, "tax_slab"):
 			if self.tax_slab.allow_tax_exemption:

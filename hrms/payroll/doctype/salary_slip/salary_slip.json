@@ -86,6 +86,7 @@
   "ctc",
   "income_from_other_sources",
   "total_earnings",
+  "taxable_earnings",
   "non_taxable_earnings",
   "column_break_0rsw",
   "taxable_deductions_till_date",
@@ -776,13 +777,19 @@
    "oldfieldtype": "Table",
    "options": "Salary Detail",
    "read_only": 1
+  },
+  {
+   "fieldname": "taxable_earnings",
+   "fieldtype": "Data",
+   "label": "Taxable Earnings",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-28 14:44:01.835398",
+ "modified": "2025-06-03 21:25:07.112066",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",
