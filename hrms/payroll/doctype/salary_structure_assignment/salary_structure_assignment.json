@@ -187,6 +187,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "tax_deducted_till_date",
    "fieldtype": "Currency",
    "label": "Tax Deducted Till Date",
@@ -220,7 +221,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-20 22:45:27.191858",
+ "modified": "2025-06-04 19:47:29.851961",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",
