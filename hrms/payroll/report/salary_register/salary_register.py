@@ -11,6 +11,7 @@ import erpnext
 salary_slip = frappe.qb.DocType("Salary Slip")
 salary_detail = frappe.qb.DocType("Salary Detail")
 salary_component = frappe.qb.DocType("Salary Component")
+employee = frappe.qb.DocType("Employee")
 
 
 def execute(filters=None):
@@ -63,7 +64,8 @@ def execute(filters=None):
 			row.update({frappe.scrub(e): ss_earning_map.get(ss.name, {}).get(e)})
 
 		for d in ded_types:
-			row.update({frappe.scrub(d): ss_ded_map.get(ss.name, {}).get(d)})
+			value = ss_ded_map.get(ss.name, {}).get(d)
+			row.update({frappe.scrub(d): f"<span style='color:red'>{frappe.format(value, {'fieldtype': 'Currency'})}</span>"})
 
 		if currency == company_currency:
 			row.update(
@@ -113,6 +115,7 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Salary Slip",
 			"width": 150,
+			"hidden": 1,
 		},
 		{
 			"label": _("Employee"),
@@ -120,6 +123,8 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Employee",
 			"width": 120,
+			"hidden": 1,
+
 		},
 		{
 			"label": _("Employee Name"),
@@ -132,6 +137,7 @@ def get_columns(earning_types, ded_types):
 			"fieldname": "data_of_joining",
 			"fieldtype": "Date",
 			"width": 80,
+			"hidden": 1,
 		},
 		{
 			"label": _("Branch"),
@@ -139,6 +145,7 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Branch",
 			"width": -1,
+			"hidden": 1,
 		},
 		{
 			"label": _("Department"),
@@ -146,18 +153,21 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Department",
 			"width": -1,
+			"hidden": 1,
 		},
 		{
 			"label": _("DPI"),
 			"fieldname": "dpi",
 			"fieldtype": "Data",
 			"width": 120,
+			"hidden": 1,
 		},
 			{
 			"label": _("Tax Identification Number"),
 			"fieldname": "tax_identification_number",
 			"fieldtype": "Data",
 			"width": 120,
+			"hidden": 1,
 		},
 		{
 			"label": _("Designation"),
@@ -165,6 +175,7 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Designation",
 			"width": 120,
+			"hidden": 1,
 		},
 		{
 			"label": _("Company"),
@@ -172,21 +183,24 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Company",
 			"width": 120,
+			"hidden": 1,
 		},
 		{
 			"label": _("Start Date"),
 			"fieldname": "start_date",
 			"fieldtype": "Data",
 			"width": 80,
+			"hidden": 1,
 		},
 		{
 			"label": _("End Date"),
 			"fieldname": "end_date",
 			"fieldtype": "Data",
 			"width": 80,
+			"hidden": 1,
 		},
 		{
-			"label": _("Leave Without Pay"),
+			"label": _("Leave"),
 			"fieldname": "leave_without_pay",
 			"fieldtype": "Float",
 			"width": 50,
@@ -231,7 +245,7 @@ def get_columns(earning_types, ded_types):
 			{
 				"label": deduction,
 				"fieldname": frappe.scrub(deduction),
-				"fieldtype": "Currency",
+				"fieldtype": "HTML",
 				"options": "currency",
 				"width": 120,
 			}
@@ -245,6 +259,7 @@ def get_columns(earning_types, ded_types):
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
+				"hidden": 1,
 			},
 			{
 				"label": _("Total Deduction"),
@@ -252,6 +267,7 @@ def get_columns(earning_types, ded_types):
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
+				"hidden": 1,
 			},
 			{
 				"label": _("Net Pay"),
@@ -288,7 +304,7 @@ def get_salary_component_type(salary_component):
 def get_salary_slips(filters, company_currency):
 	doc_status = {"Draft": 0, "Submitted": 1, "Cancelled": 2}
 
-	query = frappe.qb.from_(salary_slip).select(salary_slip.star)
+	query = frappe.qb.from_(salary_slip).join(employee).on(salary_slip.employee == employee.name).select(salary_slip.star)
 
 	if filters.get("docstatus"):
 		query = query.where(salary_slip.docstatus == doc_status[filters.get("docstatus")])
@@ -304,6 +320,9 @@ def get_salary_slips(filters, company_currency):
 
 	if filters.get("employee"):
 		query = query.where(salary_slip.employee == filters.get("employee"))
+
+	if filters.get("employment_type"):
+		query = query.where(employee.employment_type == filters.get("employment_type"))
 
 	if filters.get("currency") and filters.get("currency") != company_currency:
 		query = query.where(salary_slip.currency == filters.get("currency"))
