@@ -123,7 +123,7 @@ class SalarySlip(TransactionBase):
 	@property
 	def payroll_period(self):
 		if not hasattr(self, "__payroll_period"):
-			self.__payroll_period = get_payroll_period(self.start_date, self.end_date, self.company)
+			self.__payroll_period = get_payroll_period(self.start_date, self.end_date)
 
 		return self.__payroll_period
 

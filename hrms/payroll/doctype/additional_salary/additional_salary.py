@@ -5,8 +5,7 @@
 import frappe
 from frappe import _, bold
 from frappe.model.document import Document
-from frappe.utils import comma_and, date_diff, formatdate, get_link_to_form, getdate
-
+from frappe.utils import comma_and, date_diff, formatdate, get_link_to_form, getdate,get_first_day, get_last_day,add_months
 from hrms.hr.utils import validate_active_employee
 
 
@@ -21,6 +20,7 @@ class AdditionalSalary(Document):
 
 	def validate(self):
 		validate_active_employee(self.employee)
+		self.validate_salary_component_overlaps()
 		self.validate_dates()
 		self.validate_salary_structure()
 		self.validate_recurring_additional_salary_overlap()
@@ -38,6 +38,55 @@ class AdditionalSalary(Document):
 					self.employee
 				)
 			)
+
+
+	def validate_salary_component_overlaps(self):
+		if not self.employee or not self.salary_component:
+			return
+
+		def get_months_range(start_date, end_date):
+			months = set()
+			current = getdate(start_date).replace(day=1)
+			end = getdate(end_date).replace(day=1)
+			while current <= end:
+				months.add(current.strftime("%Y-%m"))
+				current = add_months(current, 1)
+			return months
+
+		# Meses cubiertos por este registro
+		if self.is_recurring:
+			self_months = get_months_range(self.from_date, self.to_date)
+		else:
+			self_months = {getdate(self.payroll_date).strftime("%Y-%m")}
+
+		# Buscar otros registros del mismo empleado y componente
+		other_salaries = frappe.get_all(
+			"Additional Salary",
+			filters={
+				"employee": self.employee,
+				"salary_component": self.salary_component,
+				"company": self.company,
+				"docstatus": 1,
+				"name": ["!=", self.name],
+			},
+			fields=["name", "is_recurring", "payroll_date", "from_date", "to_date"],
+		)
+
+		for other in other_salaries:
+			if other.is_recurring:
+				other_months = get_months_range(other.from_date, other.to_date)
+			else:
+				other_months = {getdate(other.payroll_date).strftime("%Y-%m")}
+
+			if self_months & other_months:
+				frappe.throw(
+					_("Employee {0} already has an Additional Salary with component {1} for month {2} (Document: {3})").format(
+						frappe.bold(self.employee),
+						frappe.bold(self.salary_component),
+						list(self_months & other_months)[0],
+						other.name
+					)
+				)
 
 	def validate_recurring_additional_salary_overlap(self):
 		if self.is_recurring:

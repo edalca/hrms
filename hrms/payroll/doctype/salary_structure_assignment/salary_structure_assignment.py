@@ -17,10 +17,8 @@ class DuplicateAssignment(frappe.ValidationError):
 class SalaryStructureAssignment(Document):
 	def validate(self):
 		self.validate_dates()
-		self.validate_company()
 		self.validate_income_tax_slab()
-		self.set_payroll_payable_account()
-
+		self.check_salary_component_accounts()
 		if not self.get("payroll_cost_centers"):
 			self.set_payroll_cost_centers()
 
@@ -29,6 +27,33 @@ class SalaryStructureAssignment(Document):
 
 	def on_update_after_submit(self):
 		self.validate_cost_centers()
+
+	def check_salary_component_accounts(self):
+		if not self.salary_structure or not self.company:
+			return
+
+		salary_structure = frappe.get_doc("Salary Structure", self.salary_structure)
+		missing_accounts = []
+
+		for d in salary_structure.get("earnings") + salary_structure.get("deductions"):
+			component_name = d.salary_component
+			component_doc = frappe.get_doc("Salary Component", component_name)
+
+			# Filtrar accounts de la compañía específica
+			matched_accounts = [
+				acc for acc in component_doc.accounts
+				if acc.company == self.company
+			]
+
+			if not matched_accounts:
+				missing_accounts.append(component_name)
+
+		if missing_accounts:
+			frappe.throw(
+				_("The following Salary Components do not have an account assigned for the selected Company {0}: {1}").format(
+					self.company, ", ".join(missing_accounts)
+				)
+			)
 
 	def validate_dates(self):
 		joining_date, relieving_date = frappe.db.get_value(
@@ -59,16 +84,17 @@ class SalaryStructureAssignment(Document):
 					)
 				)
 
-	def validate_company(self):
-		salary_structure_company = frappe.db.get_value(
-			"Salary Structure", self.salary_structure, "company", cache=True
-		)
-		if self.company != salary_structure_company:
-			frappe.throw(
-				_("Salary Structure {0} does not belong to company {1}").format(
-					frappe.bold(self.salary_structure), frappe.bold(self.company)
-				)
-			)
+	#def validate_company(self):
+	#	salary_structure_company = frappe.db.get_value(
+	#		"Salary Structure", self.salary_structure, "company", cache=True
+	#	)
+	#	if self.company != salary_structure_company:
+	#		frappe.throw(
+	#			_("Salary Structure {0} does not belong to company {1}").format(
+	#				frappe.bold(self.salary_structure), frappe.bold(self.company)
+	#			)
+	#		)
+
 
 	def validate_income_tax_slab(self):
 		tax_component = get_tax_component(self.salary_structure)
@@ -94,22 +120,22 @@ class SalaryStructureAssignment(Document):
 				)
 			)
 
-	def set_payroll_payable_account(self):
-		if not self.payroll_payable_account:
-			payroll_payable_account = frappe.db.get_value(
-				"Company", self.company, "default_payroll_payable_account"
-			)
-			if not payroll_payable_account:
-				payroll_payable_account = frappe.db.get_value(
-					"Account",
-					{
-						"account_name": _("Payroll Payable"),
-						"company": self.company,
-						"account_currency": frappe.db.get_value("Company", self.company, "default_currency"),
-						"is_group": 0,
-					},
-				)
-			self.payroll_payable_account = payroll_payable_account
+	#def set_payroll_payable_account(self):
+	#	if not self.payroll_payable_account:
+	#		payroll_payable_account = frappe.db.get_value(
+	#			"Company", self.company, "default_payroll_payable_account"
+	#		)
+	#		if not payroll_payable_account:
+	#			payroll_payable_account = frappe.db.get_value(
+	#				"Account",
+	#				{
+	#					"account_name": _("Payroll Payable"),
+	#					"company": self.company,
+	#					"account_currency": frappe.db.get_value("Company", self.company, "default_currency"),
+	#					"is_group": 0,
+	#				},
+	#			)
+	#		self.payroll_payable_account = payroll_payable_account
 
 	@frappe.whitelist()
 	def set_payroll_cost_centers(self):

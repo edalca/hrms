@@ -25,7 +25,7 @@ class PayrollPeriod(Document):
 			select name
 			from `tab{0}`
 			where name != %(name)s
-			and company = %(company)s and (start_date between %(start_date)s and %(end_date)s \
+			and (start_date between %(start_date)s and %(end_date)s \
 				or end_date between %(start_date)s and %(end_date)s \
 				or (start_date < %(start_date)s and end_date > %(end_date)s))
 			"""
@@ -39,7 +39,6 @@ class PayrollPeriod(Document):
 				"start_date": self.start_date,
 				"end_date": self.end_date,
 				"name": self.name,
-				"company": self.company,
 			},
 			as_dict=1,
 		)
@@ -56,18 +55,14 @@ class PayrollPeriod(Document):
 
 
 def get_payroll_period_days(start_date, end_date, employee, company=None):
-	if not company:
-		company = frappe.db.get_value("Employee", employee, "company")
 	payroll_period = frappe.db.sql(
 		"""
 		select name, start_date, end_date
 		from `tabPayroll Period`
-		where
-			company=%(company)s
-			and %(start_date)s between start_date and end_date
+		where %(start_date)s between start_date and end_date
 			and %(end_date)s between start_date and end_date
 	""",
-		{"company": company, "start_date": start_date, "end_date": end_date},
+		{"start_date": start_date, "end_date": end_date},
 	)
 
 	if len(payroll_period) > 0:
@@ -83,7 +78,7 @@ def get_payroll_period_days(start_date, end_date, employee, company=None):
 
 
 @redis_cache()
-def get_payroll_period(from_date, to_date, company):
+def get_payroll_period(from_date, to_date):
 	PayrollPeriod = frappe.qb.DocType("Payroll Period")
 
 	payroll_period = (
@@ -92,7 +87,6 @@ def get_payroll_period(from_date, to_date, company):
 		.where(
 			(PayrollPeriod.start_date <= from_date)
 			& (PayrollPeriod.end_date >= to_date)
-			& (PayrollPeriod.company == company)
 		)
 	).run(as_dict=1)
 

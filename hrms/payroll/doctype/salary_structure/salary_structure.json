@@ -8,19 +8,19 @@
  "document_type": "Document",
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "letter_head",
+  "currency",
   "column_break1",
   "is_active",
   "is_default",
-  "currency",
+  "payroll_frequency",
+  "company",
+  "letter_head",
   "amended_from",
   "time_sheet_earning_detail",
-  "leave_encashment_amount_per_day",
   "max_benefits",
+  "leave_encashment_amount_per_day",
   "column_break_17",
   "salary_slip_based_on_timesheet",
-  "payroll_frequency",
   "salary_component",
   "hour_rate",
   "earning_deduction",
@@ -41,10 +41,10 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Company",
    "options": "Company",
    "remember_last_selected_value": 1,
-   "reqd": 1,
    "search_index": 1
   },
   {
@@ -53,6 +53,7 @@
    "fetch_if_empty": 1,
    "fieldname": "letter_head",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Letter Head",
    "options": "Letter Head"
   },
@@ -102,6 +103,7 @@
    "default": "0",
    "fieldname": "salary_slip_based_on_timesheet",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Salary Slip Based on Timesheet",
    "search_index": 1
   },
@@ -126,12 +128,14 @@
    "allow_on_submit": 1,
    "fieldname": "leave_encashment_amount_per_day",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Leave Encashment Amount Per Day",
    "options": "currency"
   },
   {
    "fieldname": "max_benefits",
    "fieldtype": "Currency",
+   "hidden": 1,
    "label": "Max Benefits (Amount)",
    "options": "currency"
   },
@@ -244,7 +248,7 @@
  "idx": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-19 20:32:09.122928",
+ "modified": "2025-06-20 00:31:29.483158",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure",

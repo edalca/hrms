@@ -24,7 +24,7 @@ class EmployeeBenefitClaim(Document):
 		if not max_benefits or max_benefits <= 0:
 			frappe.throw(_("Employee {0} has no maximum benefit amount").format(self.employee))
 		payroll_period = get_payroll_period(
-			self.claim_date, self.claim_date, frappe.db.get_value("Employee", self.employee, "company")
+			self.claim_date, self.claim_date
 		)
 		if not payroll_period:
 			frappe.throw(

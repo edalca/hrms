@@ -421,29 +421,23 @@ def get_employees(salary_structure):
 
 @frappe.whitelist()
 def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
-	sc = frappe.qb.DocType("Salary Component")
-	sca = frappe.qb.DocType("Salary Component Account")
+    SalaryComponent = frappe.qb.DocType("Salary Component")
+    component_type = filters.get("component_type")
 
-	salary_components = (
-		frappe.qb.from_(sc)
-		.left_join(sca)
-		.on(sca.parent == sc.name)
-		.select(sc.name, sca.account, sca.company)
-		.where(
-			(sc.type == filters.get("component_type"))
-			& (sc.disabled == 0)
-			& (sc[searchfield].like(f"%{txt}%") | sc.name.like(f"%{txt}%"))
-		)
-		.limit(page_len)
-		.offset(start)
-	).run(as_dict=True)
+    query = (
+        frappe.qb.from_(SalaryComponent)
+        .select(SalaryComponent.name, SalaryComponent.salary_component_abbr,SalaryComponent.description)
+        .where(
+            (SalaryComponent.type == component_type)
+            & (SalaryComponent.disabled == 0)
+            & (
+                SalaryComponent[searchfield].like(f"%{txt}%")
+                | SalaryComponent.name.like(f"%{txt}%")
+            )
+        )
+        .limit(page_len)
+        .offset(start)
+    )
 
-	accounts = []
-	for component in salary_components:
-		if not component.company:
-			accounts.append((component.name, component.account, component.company))
-		else:
-			if component.company == filters["company"]:
-				accounts.append((component.name, component.account, component.company))
-
-	return accounts
+    results = query.run(as_dict=True)
+    return [(r.name,r.salary_component_abbr,r.description) for r in results]

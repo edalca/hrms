@@ -7,35 +7,24 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "company",
-  "column_break_2",
   "start_date",
+  "column_break_exoj",
   "end_date",
   "section_break_5",
   "periods"
  ],
  "fields": [
   {
-   "fieldname": "company",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Company",
-   "options": "Company",
-   "reqd": 1
-  },
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "start_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Start Date",
    "reqd": 1
   },
   {
    "fieldname": "end_date",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "End Date",
    "reqd": 1
   },
@@ -50,13 +39,18 @@
    "fieldtype": "Table",
    "label": "Payroll Periods",
    "options": "Payroll Period Date"
+  },
+  {
+   "fieldname": "column_break_exoj",
+   "fieldtype": "Column Break"
   }
  ],
  "links": [],
- "modified": "2024-05-07 17:27:51.903593",
+ "modified": "2025-06-21 02:21:53.828676",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Period",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
@@ -72,14 +66,14 @@
    "write": 1
   },
   {
-    "email": 1,
-    "export": 1,
-    "print": 1,
-    "read": 1,
-    "report": 1,
-    "role": "Employee",
-    "share": 1
-   },
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Employee",
+   "share": 1
+  },
   {
    "create": 1,
    "delete": 1,
@@ -105,7 +99,9 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "creation",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

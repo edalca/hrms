@@ -12,7 +12,6 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		frm.set_query("salary_structure", function () {
 			return {
 				filters: {
-					company: frm.doc.company,
 					docstatus: 1,
 					is_active: "Yes",
 				},
@@ -22,22 +21,9 @@ frappe.ui.form.on("Salary Structure Assignment", {
 		frm.set_query("income_tax_slab", function () {
 			return {
 				filters: {
-					company: frm.doc.company,
 					docstatus: 1,
 					disabled: 0,
 					currency: frm.doc.currency,
-				},
-			};
-		});
-
-		frm.set_query("payroll_payable_account", function () {
-			var company_currency = erpnext.get_currency(frm.doc.company);
-			return {
-				filters: {
-					company: frm.doc.company,
-					root_type: "Liability",
-					is_group: 0,
-					account_currency: ["in", [frm.doc.currency, company_currency]],
 				},
 			};
 		});
@@ -84,19 +70,6 @@ frappe.ui.form.on("Salary Structure Assignment", {
 			frm.trigger("toggle_opening_balances_section");
 		} else {
 			frm.set_value("payroll_cost_centers", []);
-		}
-	},
-
-	company: function (frm) {
-		if (frm.doc.company) {
-			frappe.db.get_value(
-				"Company",
-				frm.doc.company,
-				"default_payroll_payable_account",
-				(r) => {
-					frm.set_value("payroll_payable_account", r.default_payroll_payable_account);
-				},
-			);
 		}
 	},
 
