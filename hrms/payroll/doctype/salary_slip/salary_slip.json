@@ -17,12 +17,10 @@
   "column_break_obdl",
   "posting_date",
   "letter_head",
-  "column_break_18",
-  "status",
-  "salary_withholding",
-  "salary_withholding_cycle",
   "currency",
   "exchange_rate",
+  "salary_withholding",
+  "salary_withholding_cycle",
   "section_break_gsts",
   "payroll_frequency",
   "start_date",
@@ -36,6 +34,8 @@
   "section_break_gerh",
   "deduct_tax_for_unclaimed_employee_benefits",
   "deduct_tax_for_unsubmitted_tax_exemption_proof",
+  "section_break_ppum",
+  "status",
   "payment_days_tab",
   "total_working_days",
   "unmarked_days",
@@ -62,26 +62,28 @@
   "deductions_stadistical",
   "totals",
   "gross_pay",
-  "base_gross_pay",
-  "gross_year_to_date",
-  "base_gross_year_to_date",
-  "column_break_25",
   "total_deduction",
-  "base_total_deduction",
-  "net_pay_info",
   "net_pay",
+  "column_break_25",
+  "gross_year_to_date",
+  "year_to_date",
+  "section_break_fusm",
+  "base_gross_pay",
+  "base_total_deduction",
   "base_net_pay",
+  "column_break_szvd",
+  "base_gross_year_to_date",
+  "base_year_to_date",
+  "section_break_vgrs",
+  "total_in_words",
+  "column_break_pkmm",
+  "base_total_in_words",
+  "net_pay_info",
   "rounded_total",
   "base_rounded_total",
   "column_break_dqnd",
-  "year_to_date",
-  "base_year_to_date",
   "month_to_date",
   "base_month_to_date",
-  "section_break_55",
-  "total_in_words",
-  "column_break_69",
-  "base_total_in_words",
   "income_tax_calculation_breakup_section",
   "ctc",
   "income_from_other_sources",
@@ -121,7 +123,6 @@
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_global_search": 1,
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Employee",
    "oldfieldname": "employee",
@@ -145,7 +146,6 @@
    "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Link",
-   "in_standard_filter": 1,
    "label": "Department",
    "oldfieldname": "department",
    "oldfieldtype": "Link",
@@ -177,6 +177,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Status",
    "options": "Draft\nSubmitted\nCancelled\nWithheld",
    "read_only": 1
@@ -352,6 +353,7 @@
   {
    "fieldname": "net_pay_info",
    "fieldtype": "Tab Break",
+   "hidden": 1,
    "label": "Net Pay Info"
   },
   {
@@ -368,10 +370,6 @@
    "label": "Rounded Total",
    "options": "currency",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_55",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "amended_from",
@@ -402,10 +400,6 @@
    "fieldtype": "Float",
    "hidden": 1,
    "label": "Unmarked days"
-  },
-  {
-   "fieldname": "column_break_18",
-   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval:(doc.docstatus==1 || doc.salary_structure)",
@@ -491,14 +485,10 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_69",
-   "fieldtype": "Column Break"
-  },
-  {
    "description": "Total salary booked for this employee from the beginning of the year (payroll period or fiscal year) up to the current salary slip's end date.",
    "fieldname": "year_to_date",
    "fieldtype": "Currency",
-   "label": "Year To Date",
+   "label": "Net Year To Date",
    "options": "currency",
    "read_only": 1
   },
@@ -513,7 +503,7 @@
   {
    "fieldname": "base_year_to_date",
    "fieldtype": "Currency",
-   "label": "Year To Date(Company Currency)",
+   "label": "Net Year To Date(Company Currency)",
    "options": "Company:company:default_currency",
    "read_only": 1
   },
@@ -532,7 +522,6 @@
   {
    "fieldname": "leave_details",
    "fieldtype": "Table",
-   "label": "Leave Details",
    "options": "Salary Slip Leave",
    "read_only": 1
   },
@@ -570,7 +559,8 @@
   },
   {
    "fieldname": "section_break_gerh",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1
   },
   {
    "fieldname": "column_break_geio",
@@ -780,16 +770,36 @@
   },
   {
    "fieldname": "taxable_earnings",
-   "fieldtype": "Data",
+   "fieldtype": "Currency",
    "label": "Taxable Earnings",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_fusm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_szvd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_vgrs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_pkmm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ppum",
+   "fieldtype": "Section Break"
   }
  ],
  "icon": "fa fa-file-text",
  "idx": 9,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-03 21:25:07.112066",
+ "modified": "2025-06-21 03:49:35.676654",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Slip",

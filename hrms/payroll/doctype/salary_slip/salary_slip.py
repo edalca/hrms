@@ -67,7 +67,7 @@ TAX_COMPONENTS_BY_COMPANY = "tax_components_by_company"
 class SalarySlip(TransactionBase):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
-		self.series = f"Sal Slip/{self.employee}/.#####"
+		self.series = f"SS/{self.employee}/.#####"
 		self.whitelisted_globals = {
 			"int": int,
 			"float": float,

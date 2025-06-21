@@ -36,7 +36,6 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Employee",
    "options": "Employee",
@@ -205,6 +204,7 @@
   {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
@@ -212,7 +212,7 @@
  ],
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-21 02:40:21.765829",
+ "modified": "2025-06-21 03:08:09.133968",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Salary Structure Assignment",

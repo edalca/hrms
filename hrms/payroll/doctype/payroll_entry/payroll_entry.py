@@ -167,7 +167,6 @@ class PayrollEntry(Document):
 			start_date=self.start_date,
 			end_date=self.end_date,
    			employment_type=self.employment_type,
-			payroll_payable_account=self.payroll_payable_account,
 			salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
 		)
 
@@ -184,11 +183,10 @@ class PayrollEntry(Document):
 
 		if not employees:
 			error_msg = _(
-				"No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
+				"No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}"
 			).format(
 				frappe.bold(self.company),
 				frappe.bold(self.currency),
-				frappe.bold(self.payroll_payable_account),
 			)
 			if self.branch:
 				error_msg += "<br>" + _("Branch: {0}").format(frappe.bold(self.branch))
@@ -1192,7 +1190,7 @@ class PayrollEntry(Document):
 
 
 def get_salary_structure(
-	company: str, currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
+	 currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
 ) -> list[str]:
 	SalaryStructure = frappe.qb.DocType("Salary Structure")
 
@@ -1202,7 +1200,6 @@ def get_salary_structure(
 		.where(
 			(SalaryStructure.docstatus == 1)
 			& (SalaryStructure.is_active == "Yes")
-			& (SalaryStructure.company == company)
 			& (SalaryStructure.currency == currency)
 			& (SalaryStructure.salary_slip_based_on_timesheet == salary_slip_based_on_timesheet)
 		)
@@ -1234,11 +1231,11 @@ def get_filtered_employees(
 		.on(Employee.name == SalaryStructureAssignment.employee)
 		.where(
 			(SalaryStructureAssignment.docstatus == 1)
+			& (SalaryStructureAssignment.company == filters.company)
 			& (Employee.status != "Inactive")
 			& ((Employee.date_of_joining <= filters.end_date) | (Employee.date_of_joining.isnull()))
 			& ((Employee.relieving_date >= filters.start_date) | (Employee.relieving_date.isnull()))
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
-			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
 			& (filters.end_date >= SalaryStructureAssignment.from_date)
 		)
 	)
@@ -1578,7 +1575,6 @@ def get_employee_list(
 	ignore_match_conditions=False,
 ) -> list:
 	sal_struct = get_salary_structure(
-		filters.company,
 		filters.currency,
 		filters.salary_slip_based_on_timesheet,
 		filters.payroll_frequency,
