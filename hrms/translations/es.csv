@@ -1049,7 +1049,7 @@ Reference: {0},Referencia: {0},
 Cannot submit. Attendance is not marked for some employees.,No se puede enviar. La asistencia no está marcada para algunos empleados.,
 Attendance has been marked for all the employees between the selected payroll dates.,La asistencia ha sido marcada para todos los empleados entre las fechas de nómina seleccionadas.,
 Filter Employees,Filtrar Empleados,
-"The following Salary Components do not have an account assigned for the selected Company {0}: {1}","Los siguientes componentes salariales no tienen una cuenta asignada para la empresa seleccionada {0}: {1}"
+"The following Salary Components do not have an account assigned for the selected Company {0}: {1}","Los siguientes <b>Componentes Salariales</b> no tienen una cuenta asignada para la empresa seleccionada {0}: <br><b>{1}</b>"
 "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}","La tabla de impuestos sobre la renta es obligatoria ya que la Estructura Salarial {0} tiene un componente de impuesto {1}",
 Payroll Period Company,Período de Nómina Compañía,
 Employee {0} already has an Additional Salary with component {1} for month {2} (Document: {3}),El empleado {0} ya tiene un salario adicional con el componente {1} para el mes {2} (Documento: {3}),
@@ -1064,3 +1064,4 @@ Expired Leave(s),Permiso(s) Expirado,
 Used Leave(s),Permiso(s) Usado,
 Leave(s) Pending Approval,Permiso(s) Pendiente de Aprobación,
 Leave Details,Detalles del Permiso,
+{} Draft,{} Borrador,

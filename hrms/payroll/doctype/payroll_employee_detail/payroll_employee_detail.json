@@ -7,14 +7,17 @@
  "field_order": [
   "employee",
   "employee_name",
-  "column_break_3",
   "department",
   "designation",
+  "column_break_3",
+  "earnings",
+  "deductions",
+  "net_pay",
   "is_salary_withheld"
  ],
  "fields": [
   {
-   "columns": 2,
+   "columns": 3,
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -25,6 +28,7 @@
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Employee Name",
    "read_only": 1
@@ -37,6 +41,7 @@
    "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Link",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Department",
    "options": "Department",
@@ -46,22 +51,44 @@
    "fetch_from": "employee.designation",
    "fieldname": "designation",
    "fieldtype": "Data",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Designation",
    "read_only": 1
   },
   {
-   "columns": 2,
+   "columns": 1,
    "default": "0",
    "fieldname": "is_salary_withheld",
    "fieldtype": "Check",
    "in_list_view": 1,
    "label": "Is Salary Withheld"
+  },
+  {
+   "fieldname": "earnings",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "deductions",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Deductions",
+   "read_only": 1
+  },
+  {
+   "fieldname": "net_pay",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Net Pay",
+   "read_only": 1
   }
  ],
  "istable": 1,
  "links": [],
- "modified": "2024-07-22 13:28:40.573807",
+ "modified": "2025-06-23 14:42:08.048823",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Employee Detail",
@@ -69,7 +96,9 @@
  "permissions": [],
  "quick_entry": 1,
  "read_only": 1,
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }
