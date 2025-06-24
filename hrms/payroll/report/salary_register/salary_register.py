@@ -123,7 +123,6 @@ def get_columns(earning_types, ded_types):
 			"fieldtype": "Link",
 			"options": "Employee",
 			"width": 120,
-			"hidden": 1,
 
 		},
 		{

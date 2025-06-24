@@ -62,8 +62,10 @@ class PayrollEntry(Document):
 			frappe.throw(_("Cannot submit. Attendance is not marked for some employees."))
 
 	def on_submit(self):
-		self.set_status(update=True, status="Submitted")
-		self.create_salary_slips()
+		try:
+			self.create_salary_slips()  # 1. Crear los slips primero
+		except Exception as e:
+			self.db_set("docstatus", 0)
 
 	def validate_existing_salary_slips(self):
 		if not self.employees:
@@ -244,7 +246,7 @@ class PayrollEntry(Document):
 					timeout=3000,
 					employees=employees,
 					args=args,
-					publish_progress=False,
+					publish_progress=True,
 				)
 				frappe.msgprint(
 					_("Salary Slip creation is queued. It may take a few minutes"),
@@ -1425,25 +1427,31 @@ def log_payroll_failure(process, payroll_entry, error):
 
 
 def create_salary_slips_for_employees(employees, args, publish_progress=True):
-	payroll_entry = frappe.get_cached_doc("Payroll Entry", args.payroll_entry)
+	payroll_entry = frappe.get_doc("Payroll Entry", args.payroll_entry)
+
 
 	try:
 		salary_slips_exist_for = get_existing_salary_slips(employees, args)
 		count = 0
-
 		employees = list(set(employees) - set(salary_slips_exist_for))
-		for emp in employees:
-			args.update({"doctype": "Salary Slip", "employee": emp})
-			frappe.get_doc(args).insert()
-
-			count += 1
-			if publish_progress:
-				frappe.publish_progress(
-					count * 100 / len(employees),
-					title=_("Creating Salary Slips..."),
-				)
-
-		payroll_entry.db_set({"status": "Submitted", "salary_slips_created": 1, "error_message": ""})
+		for emp in payroll_entry.employees:
+			if emp.employee in employees:
+				args.update({"doctype": "Salary Slip", "employee": emp.employee})
+				salary_slip = frappe.get_doc(args)
+				salary_slip.insert()
+				sync_employees_with_salary_slips(emp, salary_slip)
+				count += 1
+				if publish_progress:
+					frappe.publish_progress(
+						count * 100 / len(employees),
+						title=_("Creating Salary Slips"),
+					)
+		payroll_entry.gross_pay = sum(emp.gross_pay for emp in payroll_entry.employees if emp.employee in employees)
+		payroll_entry.total_deduction = sum(emp.deductions for emp in payroll_entry.employees if emp.employee in employees)
+		payroll_entry.net_pay = sum(emp.net_pay for emp in payroll_entry.employees if emp.employee in employees)
+		payroll_entry.salary_slips_created = 1
+		payroll_entry.save(ignore_permissions=True)
+		payroll_entry.db_set({"status": "Pending Submission", "salary_slips_created": 1, "error_message": ""})
 
 		if salary_slips_exist_for:
 			frappe.msgprint(
@@ -1457,11 +1465,36 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 	except Exception as e:
 		frappe.db.rollback()
 		log_payroll_failure("creation", payroll_entry, e)
+		payroll_entry.db_set("docstatus", 0)
 
 	finally:
 		frappe.db.commit()  # nosemgrep
 		frappe.publish_realtime("completed_salary_slip_creation", user=frappe.session.user)
 
+def sync_employees_with_salary_slips(employee, slip):
+    employee.total_working_days = slip.total_working_days
+    employee.unmarked_days = slip.unmarked_days
+    employee.leave_without_pay = slip.leave_without_pay
+    employee.absent_days = slip.absent_days
+    employee.payment_days = slip.payment_days
+    employee.gross_pay = slip.gross_pay
+    employee.deductions = slip.total_deduction
+    employee.net_pay = slip.net_pay
+    employee.rounded_total = slip.rounded_total
+    employee.ctc = slip.ctc
+    employee.income_from_other_sources = slip.income_from_other_sources
+    employee.total_earnings = slip.total_earnings
+    employee.taxable_earnings = slip.taxable_earnings
+    employee.non_taxable_earnings = slip.non_taxable_earnings
+    employee.taxable_deductions_till_date = slip.taxable_deductions_till_date
+    employee.standard_tax_exemption_amount = slip.standard_tax_exemption_amount
+    employee.tax_exemption_declaration = slip.tax_exemption_declaration
+    employee.deductions_before_tax_calculation = slip.deductions_before_tax_calculation
+    employee.annual_taxable_amount = slip.annual_taxable_amount
+    employee.income_tax_deducted_till_date = slip.income_tax_deducted_till_date
+    employee.current_month_income_tax = slip.current_month_income_tax
+    employee.future_income_tax_deductions = slip.future_income_tax_deductions
+    employee.total_income_tax = slip.total_income_tax
 
 def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
 	if not submitted and not unsubmitted:
@@ -1532,7 +1565,7 @@ def submit_salary_slips_for_employees(payroll_entry, salary_slips, publish_progr
 
 		if submitted:
 			payroll_entry.make_accrual_jv_entry(submitted)
-			payroll_entry.email_salary_slip(submitted)
+			#payroll_entry.email_salary_slip(submitted)
 			payroll_entry.db_set({"salary_slips_submitted": 1, "status": "Submitted", "error_message": ""})
 
 		show_payroll_submission_status(submitted, unsubmitted, payroll_entry)

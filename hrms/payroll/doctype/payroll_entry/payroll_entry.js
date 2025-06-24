@@ -54,13 +54,6 @@ frappe.ui.form.on("Payroll Entry", {
 	refresh: function (frm) {
 		if (frm.doc.status === "Queued") frm.page.btn_secondary.hide();
 
-		if (frm.doc.docstatus === 0 && !frm.is_new()) {
-			frm.page.clear_primary_action();
-			frm.add_custom_button(__("Get Employees"), function () {
-				frm.events.get_employee_details(frm);
-			}).toggleClass("btn-primary", !(frm.doc.employees || []).length);
-		}
-
 		if (
 			(frm.doc.employees || []).length &&
 			!frappe.model.has_workflow(frm.doctype) &&
@@ -104,7 +97,21 @@ frappe.ui.form.on("Payroll Entry", {
 			});
 		}
 	},
-
+	get_employees: function (frm) {
+		if (frm.doc.employees && frm.doc.employees.length) {
+			frappe.confirm(
+				__("This will clear the existing employees and fetch new employees. Do you want to continue?"),
+				function () {
+					frm.events.get_employee_details(frm);
+				},
+				function () {
+					frm.scroll_to_field("employees");
+				}
+			);
+		} else {
+			frm.events.get_employee_details(frm);
+		}
+	},
 	get_employee_details: function (frm) {
 		return frappe
 			.call({
@@ -114,16 +121,10 @@ frappe.ui.form.on("Payroll Entry", {
 				freeze_message: __("Fetching Employees"),
 			})
 			.then((r) => {
-				if (r.docs?.[0]?.employees) {
-					frm.dirty();
-					frm.save();
-				}
-
-				frm.refresh();
-
 				if (r.docs?.[0]?.validate_attendance) {
 					render_employee_attendance(frm, r.message);
 				}
+				frm.fields_dict.employees.grid.refresh();
 				frm.scroll_to_field("employees");
 			});
 	},
@@ -327,7 +328,9 @@ frappe.ui.form.on("Payroll Entry", {
 		}
 		frm.events.clear_employee_table(frm);
 	},
-
+	end_date: function (frm) {
+		frm.events.clear_employee_table(frm);
+	},
 	project: function (frm) {
 		frm.events.clear_employee_table(frm);
 	},

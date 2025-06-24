@@ -5,15 +5,47 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "employee_info_section",
+  "employee_info_column",
   "employee",
+  "designation",
+  "column_break_rttv",
   "employee_name",
   "department",
-  "designation",
+  "is_salary_withheld",
+  "section_break_iode",
   "column_break_3",
-  "earnings",
+  "total_working_days",
+  "unmarked_days",
+  "column_break_reqb",
+  "leave_without_pay",
+  "absent_days",
+  "column_break_uhtu",
+  "payment_days",
+  "totals_section",
+  "totals_column",
+  "gross_pay",
+  "column_break_nswf",
   "deductions",
+  "column_break_iwsm",
   "net_pay",
-  "is_salary_withheld"
+  "income_tax_breakup_section",
+  "ctc",
+  "income_from_other_sources",
+  "total_earnings",
+  "taxable_earnings",
+  "non_taxable_earnings",
+  "column_break_rfhc",
+  "taxable_deductions_till_date",
+  "standard_tax_exemption_amount",
+  "tax_exemption_declaration",
+  "deductions_before_tax_calculation",
+  "column_break_aewv",
+  "annual_taxable_amount",
+  "income_tax_deducted_till_date",
+  "current_month_income_tax",
+  "future_income_tax_deductions",
+  "total_income_tax"
  ],
  "fields": [
   {
@@ -28,8 +60,6 @@
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
-   "hidden": 1,
-   "in_list_view": 1,
    "label": "Employee Name",
    "read_only": 1
   },
@@ -61,17 +91,10 @@
    "default": "0",
    "fieldname": "is_salary_withheld",
    "fieldtype": "Check",
-   "in_list_view": 1,
    "label": "Is Salary Withheld"
   },
   {
-   "fieldname": "earnings",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Earnings",
-   "read_only": 1
-  },
-  {
+   "allow_on_submit": 1,
    "fieldname": "deductions",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -79,16 +102,222 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "net_pay",
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Net Pay",
    "read_only": 1
+  },
+  {
+   "fieldname": "employee_info_section",
+   "fieldtype": "Section Break",
+   "label": "Employee Info"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_working_days",
+   "fieldtype": "Float",
+   "label": "Working Days",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "unmarked_days",
+   "fieldtype": "Float",
+   "label": "Unmarked days",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "leave_without_pay",
+   "fieldtype": "Float",
+   "label": "Leave Without Pay",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "absent_days",
+   "fieldtype": "Float",
+   "label": "Absent Days",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "columns": 1,
+   "fieldname": "payment_days",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Payment Days",
+   "placeholder": "2",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "true",
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "gross_pay",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Gross Pay",
+   "read_only": 1
+  },
+  {
+   "fieldname": "totals_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "employee_info_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "income_tax_breakup_section",
+   "fieldtype": "Section Break",
+   "label": "Income Tax Breakup"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "ctc",
+   "fieldtype": "Currency",
+   "label": "CTC",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "income_from_other_sources",
+   "fieldtype": "Currency",
+   "label": "Income from Other Sources",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_earnings",
+   "fieldtype": "Currency",
+   "label": "Total Earnings",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "taxable_earnings",
+   "fieldtype": "Currency",
+   "label": "Taxable Earnings",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "non_taxable_earnings",
+   "fieldtype": "Currency",
+   "label": "Non Taxable Earnings",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rfhc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "taxable_deductions_till_date",
+   "fieldtype": "Currency",
+   "label": "Taxable Deductions Till Date",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "standard_tax_exemption_amount",
+   "fieldtype": "Currency",
+   "label": "Standard Tax Exemption Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_aewv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "tax_exemption_declaration",
+   "fieldtype": "Currency",
+   "label": "Tax Exemption Declaration",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "deductions_before_tax_calculation",
+   "fieldtype": "Currency",
+   "label": "Deductions before tax calculation",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "annual_taxable_amount",
+   "fieldtype": "Currency",
+   "label": "Annual Taxable Amount",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "income_tax_deducted_till_date",
+   "fieldtype": "Currency",
+   "label": "Income Tax Deducted Till Date",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "current_month_income_tax",
+   "fieldtype": "Currency",
+   "label": "Current Month Income Tax",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "future_income_tax_deductions",
+   "fieldtype": "Currency",
+   "label": "Future Income Tax",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "total_income_tax",
+   "fieldtype": "Currency",
+   "label": "Total Income Tax",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_rttv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_iode",
+   "fieldtype": "Section Break",
+   "label": "Payment Days"
+  },
+  {
+   "fieldname": "column_break_reqb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_uhtu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_nswf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_iwsm",
+   "fieldtype": "Column Break"
   }
  ],
+ "grid_page_length": 10,
  "istable": 1,
  "links": [],
- "modified": "2025-06-23 14:42:08.048823",
+ "modified": "2025-06-24 02:19:05.394666",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Employee Detail",

@@ -8,47 +8,54 @@
  "engine": "InnoDB",
  "field_order": [
   "select_payroll_period",
-  "description",
   "posting_date",
+  "description",
   "status",
   "column_break_5",
+  "payroll_frequency",
+  "start_date",
+  "end_date",
+  "column_break_oqve",
   "company",
   "payroll_payable_account",
   "currency",
   "exchange_rate",
-  "section_break_cypo",
-  "salary_slip_based_on_timesheet",
-  "payroll_frequency",
-  "start_date",
-  "end_date",
-  "column_break_13",
-  "deduct_tax_for_unclaimed_employee_benefits",
-  "deduct_tax_for_unsubmitted_tax_exemption_proof",
-  "employees_tab",
   "section_break_17",
   "branch",
   "department",
   "employment_type",
+  "validate_attendance",
   "column_break_21",
   "designation",
   "grade",
   "number_of_employees",
+  "get_employees",
   "section_break_24",
   "employees",
+  "totals_section",
+  "gross_pay",
+  "column_break_hwip",
+  "total_deduction",
+  "column_break_cssf",
+  "net_pay",
+  "section_break_cypo",
+  "column_break_13",
+  "salary_slip_based_on_timesheet",
+  "deduct_tax_for_unclaimed_employee_benefits",
+  "deduct_tax_for_unsubmitted_tax_exemption_proof",
   "section_break_26",
-  "validate_attendance",
   "attendance_detail_html",
-  "accounting_dimensions_tab",
-  "accounting_dimensions_section",
-  "cost_center",
-  "dimension_col_break",
-  "project",
   "account",
   "payment_account",
   "column_break_35",
   "bank_account",
   "salary_slips_created",
   "salary_slips_submitted",
+  "accounting_dimensions_tab",
+  "accounting_dimensions_section",
+  "cost_center",
+  "dimension_col_break",
+  "project",
   "failure_details_section",
   "error_message",
   "section_break_41",
@@ -83,7 +90,6 @@
   {
    "fieldname": "branch",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Branch",
    "options": "Branch"
   },
@@ -108,7 +114,9 @@
   {
    "fieldname": "employees",
    "fieldtype": "Table",
-   "options": "Payroll Employee Detail"
+   "label": "Employees",
+   "options": "Payroll Employee Detail",
+   "reqd": 1
   },
   {
    "default": "0",
@@ -173,6 +181,7 @@
    "options": "Project"
   },
   {
+   "collapsible": 1,
    "fieldname": "account",
    "fieldtype": "Section Break",
    "label": "Payment Entry"
@@ -196,6 +205,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "salary_slips_created",
    "fieldtype": "Check",
@@ -205,6 +215,7 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "salary_slips_submitted",
    "fieldtype": "Check",
@@ -223,6 +234,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "bank_account",
    "fieldtype": "Link",
    "label": "Bank Account",
@@ -232,7 +244,6 @@
    "depends_on": "company",
    "fieldname": "currency",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": "Currency",
    "options": "Currency",
    "reqd": 1
@@ -241,9 +252,10 @@
    "depends_on": "company",
    "fieldname": "exchange_rate",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Exchange Rate",
    "precision": "9",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "depends_on": "company",
@@ -276,8 +288,9 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Status",
-   "options": "Draft\nSubmitted\nCancelled\nQueued\nFailed",
+   "options": "Draft\nSubmitted\nCancelled\nQueued\nFailed\nPending Submission",
    "print_hide": 1,
    "read_only": 1
   },
@@ -292,11 +305,13 @@
   {
    "fieldname": "section_break_24",
    "fieldtype": "Section Break",
-   "label": "Employee Details"
+   "label": "Salary Slip"
   },
   {
    "fieldname": "section_break_26",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "hide_border": 1
   },
   {
    "fieldname": "column_break_35",
@@ -309,17 +324,14 @@
   {
    "fieldname": "accounting_dimensions_tab",
    "fieldtype": "Tab Break",
+   "hidden": 1,
    "label": "Accounting & Payment"
   },
   {
    "fieldname": "section_break_17",
    "fieldtype": "Section Break",
-   "label": "Filter Employees"
-  },
-  {
-   "fieldname": "employees_tab",
-   "fieldtype": "Tab Break",
-   "label": "Employees"
+   "hide_border": 1,
+   "label": "Employees Filter"
   },
   {
    "fieldname": "section_break_cypo",
@@ -349,12 +361,62 @@
    "fieldtype": "Link",
    "label": "Employment Type",
    "options": "Employment Type"
+  },
+  {
+   "fieldname": "column_break_oqve",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.docstatus === 0",
+   "fieldname": "get_employees",
+   "fieldtype": "Button",
+   "label": "Get Employees"
+  },
+  {
+   "fieldname": "totals_section",
+   "fieldtype": "Section Break",
+   "label": "Totals"
+  },
+  {
+   "allow_on_submit": 1,
+   "columns": 1,
+   "fieldname": "gross_pay",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Gross Pay",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "columns": 1,
+   "fieldname": "total_deduction",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Total Deduction",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "columns": 1,
+   "fieldname": "net_pay",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Net Pay",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hwip",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_cssf",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-20 01:21:13.105902",
+ "modified": "2025-06-24 17:23:19.214709",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
@@ -376,6 +438,23 @@
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
+ "states": [
+  {
+   "color": "Red",
+   "title": "Failed"
+  },
+  {
+   "color": "Yellow",
+   "title": "Queued"
+  },
+  {
+   "color": "Red",
+   "title": "Cancelled"
+  },
+  {
+   "color": "Green",
+   "title": "Pending Submission"
+  }
+ ],
  "title_field": "description"
 }
