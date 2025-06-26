@@ -78,6 +78,7 @@ frappe.ui.form.on("Payroll Entry", {
 		if (frm.doc.docstatus == 1) {
 			if (frm.custom_buttons) frm.clear_custom_buttons();
 			frm.events.add_context_buttons(frm);
+			get_earnings_deductions_employees(frm)
 		}
 
 		if (frm.doc.status == "Failed" && frm.doc.error_message) {
@@ -128,7 +129,6 @@ frappe.ui.form.on("Payroll Entry", {
 				frm.scroll_to_field("employees");
 			});
 	},
-
 	create_salary_slips: function (frm) {
 		frm.call({
 			doc: frm.doc,
@@ -420,7 +420,7 @@ const submit_salary_slip = function (frm) {
 	);
 };
 
-let make_bank_entry = function (frm, for_withheld_salaries = 0) {
+const make_bank_entry = function (frm, for_withheld_salaries = 0) {
 	const doc = frm.doc;
 	if (doc.payment_account) {
 		return frappe.call({
@@ -445,10 +445,105 @@ let make_bank_entry = function (frm, for_withheld_salaries = 0) {
 	}
 };
 
-let render_employee_attendance = function (frm, data) {
+const render_employee_attendance = function (frm, data) {
 	frm.fields_dict.attendance_detail_html.html(
 		frappe.render_template("employees_with_unmarked_attendance", {
 			data: data,
 		}),
 	);
+};
+
+const get_earnings_deductions_employees = function (frm) {
+	if (frm.doc.employees && frm.doc.employees.length) {
+		frappe.call({
+			method: "run_doc_method",
+			args: {
+				method: "get_earnings_deductions_employees",
+				dt: "Payroll Entry",
+				dn: frm.doc.name,
+			},
+			callback: function (r) {
+				if (r.message) {
+					const data = r.message;
+					frm.doc.employees.forEach((employee) => {
+						const emp_data = data[employee.employee];
+						if (emp_data) {
+							frm.set_df_property("employees", "options", render_component_table(emp_data.earnings, frm.doc.currency, false,"Earnings"), frm.doc.name, "earnings_html", employee.name)
+							frm.set_df_property("employees", "options", render_component_table(emp_data.deductions, frm.doc.currency, true,"Deductions"), frm.doc.name, "deductions_html", employee.name)
+						} else {
+							employee.earnings_html = "";
+							employee.deductions_html = "";
+						}
+					});
+					frm.refresh_field("employees");
+				}
+			}
+		});
+	}
+};
+
+const render_component_table = function (components, currency, is_deduction = false,title = "") {
+	if (!components || !components.length) return "";
+
+	let html = `
+	<div class="grid-field">
+		<label class="control-label">${__(title)}</label>
+		<div class="form-grid-container">
+			<div class="form-grid">
+				<div class="grid-heading-row">
+					<div class="grid-row">
+						<div class="data-row row">
+							<div class="col" title="${__("Salary Components")}" >
+								<div class="static-area ellipsis">${__("Salary Component")}</div>
+							</div>
+							<div class="col text-right" title="${__("Amount")}" >
+								<div class="static-area ellipsis">${__("Amount")}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="grid-body">
+					<div class="rows">
+	`;
+	let summary_amount = 0;
+	components.forEach(comp => {
+		const amount = format_currency(comp.amount, currency);
+		const component = frappe.utils.escape_html(comp.salary_component || "");
+		summary_amount += flt(comp.amount);
+		html += `
+			<div class="grid-row">
+				<div class="data-row row">
+					<div class="col" title="${component}">
+						<div class="static-area ellipsis">${component}</div>
+					</div>
+					<div class="col text-end" title="${amount}">
+						<div class="static-area ellipsis">
+							<div style="text-align: right">${amount}</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		`;
+	});
+
+	html += `		</div>
+				</div>
+				<div class="grid-heading-row">
+					<div class="grid-row">
+						<div class="data-row row">
+							<div class="col" title="${__("Totals")}" >
+								<div class="static-area ellipsis">${__("Totals")}</div>
+							</div>
+							<div class="col text-right" title="${__("Amount")}" >
+								<div class="static-area ellipsis">${format_currency(summary_amount, currency)}</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	`;
+
+	return html;
 };

@@ -20,6 +20,7 @@ from frappe.utils import (
 	flt,
 	get_link_to_form,
 	getdate,
+	fmt_money
 )
 
 import erpnext
@@ -30,7 +31,6 @@ from erpnext.accounts.utils import get_fiscal_year
 
 from hrms.payroll.doctype.salary_slip.salary_slip_loan_utils import if_lending_app_installed
 from hrms.payroll.doctype.salary_withholding.salary_withholding import link_bank_entry_in_salary_withholdings
-
 
 class PayrollEntry(Document):
 	def onload(self):
@@ -1190,6 +1190,50 @@ class PayrollEntry(Document):
 
 		return self._holidays_between_dates.get(key) or 0
 
+	@frappe.whitelist()
+	def get_earnings_deductions_employees(self):
+		from collections import defaultdict
+
+		SalaryDetail = frappe.qb.DocType("Salary Detail")
+		SalarySlip = frappe.qb.DocType("Salary Slip")
+		SalaryComponent = frappe.qb.DocType("Salary Component")
+
+		results = (
+			frappe.qb.from_(SalaryDetail)
+			.join(SalarySlip).on(SalarySlip.name == SalaryDetail.parent)
+			.join(SalaryComponent).on(SalaryComponent.name == SalaryDetail.salary_component)
+			.select(
+				SalarySlip.employee,
+				SalaryDetail.salary_component,
+				SalaryDetail.amount,
+				SalaryComponent.type,
+				SalaryDetail.parentfield
+			)
+			.where(SalarySlip.payroll_entry == self.name)
+		).run(as_dict=True)
+
+		component_type_grouped = defaultdict(lambda: {
+			"earnings": [], "deductions": [],
+			"earnings_statistical": [], "deductions_statistical": []
+		})
+
+		for row in results:
+			field_map = {
+				"earnings": "earnings",
+				"deductions": "deductions",
+				"earnings_statistical": "earnings_statistical",
+				"deductions_statistical": "deductions_statistical"
+			}
+
+			field = field_map.get(row["parentfield"])
+			if field:
+				component_type_grouped[row["employee"]][field].append({
+					"salary_component": row["salary_component"],
+					"amount": row["amount"]
+        })
+
+		return component_type_grouped
+
 
 def get_salary_structure(
 	 currency: str, salary_slip_based_on_timesheet: int, payroll_frequency: str
@@ -1355,7 +1399,7 @@ def get_start_end_dates(payroll_frequency, start_date=None, company=None):
 def get_frequency_kwargs(frequency_name):
 	frequency_dict = {
 		"monthly": {"months": 1},
-		"fortnightly": {"days": 14},
+		"fortnightly": {"days": 15},
 		"weekly": {"days": 7},
 		"daily": {"days": 1},
 	}
@@ -1472,6 +1516,7 @@ def create_salary_slips_for_employees(employees, args, publish_progress=True):
 		frappe.publish_realtime("completed_salary_slip_creation", user=frappe.session.user)
 
 def sync_employees_with_salary_slips(employee, slip):
+    employee.salary_structure = slip.salary_structure
     employee.total_working_days = slip.total_working_days
     employee.unmarked_days = slip.unmarked_days
     employee.leave_without_pay = slip.leave_without_pay
@@ -1495,6 +1540,8 @@ def sync_employees_with_salary_slips(employee, slip):
     employee.current_month_income_tax = slip.current_month_income_tax
     employee.future_income_tax_deductions = slip.future_income_tax_deductions
     employee.total_income_tax = slip.total_income_tax
+
+
 
 def show_payroll_submission_status(submitted, unsubmitted, payroll_entry):
 	if not submitted and not unsubmitted:
@@ -1595,6 +1642,7 @@ def get_payroll_entries_for_jv(doctype, txt, searchfield, start, page_len, filte
 		order by name limit %(start)s, %(page_len)s""",
 		{"txt": "%%%s%%" % txt, "start": start, "page_len": page_len},
 	)
+
 
 
 def get_employee_list(

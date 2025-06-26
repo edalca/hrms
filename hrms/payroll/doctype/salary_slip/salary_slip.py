@@ -352,7 +352,6 @@ class SalarySlip(TransactionBase):
 			# getin leave details
 			self.get_working_days_details()
 			struct = self.check_sal_struct()
-
 			if struct:
 				self.set_salary_structure_doc()
 				self.salary_slip_based_on_timesheet = (
@@ -362,6 +361,7 @@ class SalarySlip(TransactionBase):
 				self.pull_sal_struct()
 
 			process_loan_interest_accruals(self)
+
 
 	def set_time_sheet(self):
 		if self.salary_slip_based_on_timesheet:
@@ -395,6 +395,7 @@ class SalarySlip(TransactionBase):
 				& (ss.docstatus == 1)
 				& (ss.is_active == "Yes")
 				& (ssa.employee == self.employee)
+				& (ssa.company == self.company)
 				& (
 					(ssa.from_date <= self.start_date)
 					| (ssa.from_date <= self.end_date)

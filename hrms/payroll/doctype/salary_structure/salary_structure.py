@@ -385,6 +385,11 @@ def make_salary_slip(
 					"name": "salary_structure",
 					"currency": "currency",
 				},
+				   "field_no_map": {
+						"company",         # ⛔ no copiar aunque exista en ambos
+						"payroll_frequency"
+				   }
+
 			}
 		},
 		target_doc,
