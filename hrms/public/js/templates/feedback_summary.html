@@ -13,7 +13,7 @@
 		%}
 
 		<div class="feedback-count text-secondary mt-2">
-			{{ __("based on") }} {{ cstr(feedback_count) }} {{ feedback_count > 1 ? __("reviews") : __("review") }}
+			{{ __("Based on") }} {{ cstr(feedback_count) }} {{ feedback_count > 1 ? __("reviews") : __("review") }}
 		</div>
 	</div>
 
@@ -30,7 +30,7 @@
 			<div class="col-md-7">
 				<div
 					class="progress rating-progress-bar"
-					title="{{ reviews_per_rating[i-1] }} % of reviews are {{ i }} star"
+					title="{{ reviews_per_rating[i-1] }} % {{__("of reviews are")}} {{ i }} {{__("star")}}"
 				>
 					<div
 						class="progress-bar progress-bar-cosmetic"
