@@ -9,7 +9,7 @@
  "hide_custom": 0,
  "icon": "assign",
  "idx": 0,
- "is_hidden": 1,
+ "is_hidden": 0,
  "label": "Employee Lifecycle",
  "links": [
   {
@@ -289,7 +289,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-04-26 02:20:42.278876",
+ "modified": "2025-07-15 22:56:14.436603",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Lifecycle",

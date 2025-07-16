@@ -1,0 +1,19 @@
+{
+ "content": null,
+ "creation": "2025-06-27 13:32:12.744592",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2025-06-27 13:32:12.744592",
+ "modified_by": "Administrator",
+ "module": "Payroll",
+ "name": "salary-structure-man",
+ "owner": "Administrator",
+ "page_name": "salary-structure-man",
+ "roles": [],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 0,
+ "title": "Salary Structure Manager"
+}

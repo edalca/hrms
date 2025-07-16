@@ -14,7 +14,7 @@
  "hide_custom": 0,
  "icon": "users",
  "idx": 0,
- "is_hidden": 1,
+ "is_hidden": 0,
  "label": "Recruitment",
  "links": [
   {
@@ -183,7 +183,7 @@
    "type": "Link"
   }
  ],
- "modified": "2025-04-26 02:20:42.189186",
+ "modified": "2025-07-15 22:56:17.808354",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Recruitment",
