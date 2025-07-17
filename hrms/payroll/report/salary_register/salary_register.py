@@ -22,16 +22,18 @@ def execute(filters=None):
 	if filters.get("currency"):
 		currency = filters.get("currency")
 	company_currency = erpnext.get_company_currency(filters.get("company"))
-
+	consolidated = filters.get("consolidated", False)
+	show_statistical_components = filters.get("show_statistical_components", False)
 	salary_slips = get_salary_slips(filters, company_currency)
 	if not salary_slips:
 		return [], []
 
-	earning_types, ded_types = get_earning_and_deduction_types(salary_slips)
-	columns = get_columns(earning_types, ded_types)
-
+	earning_types, ded_types, earning_types_stat, ded_types_stat = get_earning_and_deduction_types(salary_slips)
+	columns = get_columns(earning_types, ded_types, earning_types_stat, ded_types_stat,show_statistical_components,consolidated)
 	ss_earning_map = get_salary_slip_details(salary_slips, currency, company_currency, "earnings")
 	ss_ded_map = get_salary_slip_details(salary_slips, currency, company_currency, "deductions")
+	ss_earning_stat_map = get_salary_slip_details(salary_slips, currency, company_currency, "earnings_statistical")
+	ss_ded_stat_map = get_salary_slip_details(salary_slips, currency, company_currency, "deductions_statistical")
 
 	doj_map = get_employee_doj_map()
 
@@ -58,14 +60,26 @@ def execute(filters=None):
 			"total_loan_repayment": ss.total_loan_repayment,
 		}
 
-		update_column_width(ss, columns)
-
+		#update_column_width(ss, columns)
 		for e in earning_types:
-			row.update({frappe.scrub(e): ss_earning_map.get(ss.name, {}).get(e)})
+			row.update({frappe.scrub(e): ss_earning_map.get(ss.name, {}).get(e, 0.0)})
+
 
 		for d in ded_types:
-			value = ss_ded_map.get(ss.name, {}).get(d)
-			row.update({frappe.scrub(d): f"<span style='color:red'>{frappe.format(value, {'fieldtype': 'Currency'})}</span>"})
+			# Obtener el valor principal
+			value = ss_ded_map.get(ss.name, {}).get(d, 0.0)
+			value_html = f"<span style='color:red'>{frappe.format(value, {'fieldtype': 'Currency'})}</span>"
+			row.update({frappe.scrub(d): value_html})
+
+		if show_statistical_components:
+			for e in earning_types_stat:
+				row.update({frappe.scrub(e): ss_earning_stat_map.get(ss.name, {}).get(e, 0.0)})
+
+			for d in ded_types_stat:
+				# Obtener el valor principal
+				value = ss_ded_stat_map.get(ss.name, {}).get(d, 0.0)
+				value_html = f"<span style='color:red'>{frappe.format(value, {'fieldtype': 'Currency'})}</span>"
+				row.update({frappe.scrub(d): value_html})
 
 		if currency == company_currency:
 			row.update(
@@ -76,9 +90,10 @@ def execute(filters=None):
 				}
 			)
 
+
 		else:
 			row.update(
-				{"gross_pay": ss.gross_pay, "total_deduction": ss.total_deduction, "net_pay": ss.net_pay}
+				{"gross_pay": ss.gross_pay, "total_deduction": ss.total_deduction , "net_pay": ss.net_pay}
 			)
 
 		data.append(row)
@@ -87,13 +102,34 @@ def execute(filters=None):
 
 
 def get_earning_and_deduction_types(salary_slips):
-	salary_component_and_type = {_("Earning"): [], _("Deduction"): []}
+    salary_components = get_salary_components(salary_slips)
 
-	for salary_component in get_salary_components(salary_slips):
-		component_type = get_salary_component_type(salary_component)
-		salary_component_and_type[_(component_type)].append(salary_component)
+    earning_types = []
+    deduction_types = []
+    earning_types_stat = []
+    deduction_types_stat = []
 
-	return sorted(salary_component_and_type[_("Earning")]), sorted(salary_component_and_type[_("Deduction")])
+    for comp in salary_components:
+        doc = frappe.get_doc("Salary Component", comp)
+
+        if doc.type == "Earning":
+            if doc.statistical_component:
+                earning_types_stat.append(comp)
+            else:
+                earning_types.append(comp)
+
+        elif doc.type == "Deduction":
+            if doc.statistical_component:
+                deduction_types_stat.append(comp)
+            else:
+                deduction_types.append(comp)
+
+    return (
+        sorted(earning_types),
+        sorted(deduction_types),
+        sorted(earning_types_stat),
+        sorted(deduction_types_stat)
+    )
 
 
 def update_column_width(ss, columns):
@@ -107,7 +143,7 @@ def update_column_width(ss, columns):
 		columns[9].update({"width": 120})
 
 
-def get_columns(earning_types, ded_types):
+def get_columns(earning_types, ded_types,earning_types_stat,ded_types_stat,show_statistical_components=True,consolidated=False):
 	columns = [
 		{
 			"label": _("Salary Slip ID"),
@@ -122,14 +158,15 @@ def get_columns(earning_types, ded_types):
 			"fieldname": "employee",
 			"fieldtype": "Link",
 			"options": "Employee",
-			"width": 120,
+			"width": 200,
 
 		},
 		{
 			"label": _("Employee Name"),
 			"fieldname": "employee_name",
 			"fieldtype": "Data",
-			"width": 140,
+			"width": 200,
+			"hidden": 1,
 		},
 		{
 			"label": _("Date of Joining"),
@@ -201,54 +238,55 @@ def get_columns(earning_types, ded_types):
 		{
 			"label": _("Leave"),
 			"fieldname": "leave_without_pay",
-			"fieldtype": "Float",
+			"fieldtype": "Int",
 			"width": 50,
 		},
 		{
 			"label": _("Absent Days"),
 			"fieldname": "absent_days",
-			"fieldtype": "Float",
+			"fieldtype": "Int",
 			"width": 50,
 		},
 		{
 			"label": _("Payment Days"),
 			"fieldname": "payment_days",
-			"fieldtype": "Float",
-			"width": 120,
+			"fieldtype": "Int",
+			"width": 50,
 		},
 	]
+	if not consolidated:
+		for earning in earning_types:
+			columns.append(
+				{
+					"label": earning,
+					"fieldname": frappe.scrub(earning),
+					"fieldtype": "Currency",
+					"options": "currency",
+					"width": 120,
+				}
+			)
 
-	for earning in earning_types:
-		columns.append(
+	columns.append(
 			{
-				"label": earning,
-				"fieldname": frappe.scrub(earning),
+				"label": _("Gross Pay"),
+				"fieldname": "gross_pay",
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
 			}
-		)
-
-	columns.append(
-		{
-			"label": _("Gross Pay"),
-			"fieldname": "gross_pay",
-			"fieldtype": "Currency",
-			"options": "currency",
-			"width": 120,
-		}
 	)
 
-	for deduction in ded_types:
-		columns.append(
-			{
-				"label": deduction,
-				"fieldname": frappe.scrub(deduction),
-				"fieldtype": "HTML",
-				"options": "currency",
-				"width": 120,
-			}
-		)
+	if  not consolidated:
+		for deduction in ded_types:
+			columns.append(
+				{
+					"label": deduction,
+					"fieldname": frappe.scrub(deduction),
+					"fieldtype": "HTML",
+					"options": "currency",
+					"width": 120,
+				}
+			)
 
 	columns.extend(
 		[
@@ -266,7 +304,6 @@ def get_columns(earning_types, ded_types):
 				"fieldtype": "Currency",
 				"options": "currency",
 				"width": 120,
-				"hidden": 1,
 			},
 			{
 				"label": _("Net Pay"),
@@ -284,6 +321,25 @@ def get_columns(earning_types, ded_types):
 			},
 		]
 	)
+	if show_statistical_components or not consolidated:
+		for earning in earning_types_stat:
+			columns.append({
+				"label": earning,
+				"fieldname": frappe.scrub(earning),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			})
+
+		for deduction in ded_types_stat:
+			columns.append({
+				"label": deduction,
+				"fieldname": frappe.scrub(deduction),
+				"fieldtype": "Currency",
+				"options": "currency",
+				"width": 120,
+			})
+
 	return columns
 
 

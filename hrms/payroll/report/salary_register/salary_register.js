@@ -58,5 +58,18 @@ frappe.query_reports["Salary Register"] = {
 			default: "Submitted",
 			width: "100px",
 		},
+		{
+			fieldname: "consolidated",
+			label: __("Consolidated"),
+			fieldtype: "Check",
+			width: "100px",
+		},
+		{
+			fieldname: "show_statistical_components",
+			label: __("Show Statistical Components"),
+			fieldtype: "Check",
+			default:1,
+			width: "100px",
+		},
 	],
 };
