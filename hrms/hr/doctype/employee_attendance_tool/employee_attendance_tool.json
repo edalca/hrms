@@ -5,13 +5,18 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "date",
+  "date_section",
+  "from_date",
+  "column_break_cmal",
+  "to_date",
   "section_break_ackd",
   "company",
   "column_break_bhny",
   "department",
   "column_break_3",
   "branch",
+  "section_break_qklq",
+  "fetch_employees",
   "unmarked_attendance_section",
   "employees_html",
   "attendance_details_section",
@@ -19,18 +24,9 @@
   "late_entry",
   "early_exit",
   "column_break_kecn",
-  "shift",
-  "marked_attendance_section",
-  "marked_attendance_html",
-  "column_break_khjs"
+  "shift"
  ],
  "fields": [
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "label": "Date"
-  },
   {
    "fieldname": "department",
    "fieldtype": "Link",
@@ -54,7 +50,6 @@
    "options": "Company"
   },
   {
-   "depends_on": "date",
    "description": "Unmarked Attendance",
    "fieldname": "unmarked_attendance_section",
    "fieldtype": "Section Break",
@@ -65,17 +60,6 @@
    "fieldtype": "HTML",
    "label": "Employees HTML",
    "read_only": 1
-  },
-  {
-   "depends_on": "date",
-   "fieldname": "marked_attendance_section",
-   "fieldtype": "Section Break",
-   "label": "Marked Attendance"
-  },
-  {
-   "fieldname": "marked_attendance_html",
-   "fieldtype": "HTML",
-   "label": "Marked Attendance HTML"
   },
   {
    "fieldname": "status",
@@ -93,7 +77,6 @@
    "label": "Filters"
   },
   {
-   "depends_on": "date",
    "description": "Set attendance details for the employees select above",
    "fieldname": "attendance_details_section",
    "fieldtype": "Section Break",
@@ -108,12 +91,14 @@
    "default": "0",
    "fieldname": "late_entry",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Late Entry"
   },
   {
    "default": "0",
    "fieldname": "early_exit",
    "fieldtype": "Check",
+   "hidden": 1,
    "label": "Early Exit"
   },
   {
@@ -127,14 +112,40 @@
    "options": "Shift Type"
   },
   {
-   "fieldname": "column_break_khjs",
+   "fieldname": "date_section",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_cmal",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_qklq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "fetch_employees",
+   "fieldtype": "Button",
+   "label": "Fetch Employees"
+  },
+  {
+   "default": "Today",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date",
+   "reqd": 1
   }
  ],
  "hide_toolbar": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-07 21:20:55.087098",
+ "modified": "2026-01-19 22:41:48.734728",
  "modified_by": "Administrator",
  "module": "HR",
  "name": "Employee Attendance Tool",
@@ -158,6 +169,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

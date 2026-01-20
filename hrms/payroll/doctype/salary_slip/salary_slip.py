@@ -849,7 +849,8 @@ class SalarySlip(TransactionBase):
 		self.previous_taxable_earnings, exempted_amount = self.get_taxable_earnings_for_prev_period(
 			self.payroll_period.start_date, self.start_date, self.tax_slab.allow_tax_exemption
 		)
-
+		print("previous_taxable_earnings", self.previous_taxable_earnings)
+		print("exempted_amount", exempted_amount)
 		self.previous_taxable_earnings_before_exemption = self.previous_taxable_earnings + exempted_amount
 
 		self.compute_current_and_future_taxable_earnings()
@@ -983,6 +984,12 @@ class SalarySlip(TransactionBase):
 
 	def compute_ctc(self):
 		if hasattr(self, "previous_taxable_earnings"):
+			print("self.previous_taxable_earnings_before_exemption:",self.previous_taxable_earnings_before_exemption)
+			print("self.current_structured_taxable_earnings_before_exemption:",self.current_structured_taxable_earnings_before_exemption)
+			print("self.future_structured_taxable_earnings_before_exemption:",self.future_structured_taxable_earnings_before_exemption)
+			print("self.current_additional_earnings:",self.current_additional_earnings)
+			print("self.unclaimed_taxable_benefits:",self.unclaimed_taxable_benefits)
+			print("self.non_taxable_earnings:",self.non_taxable_earnings)
 			return (
 				self.previous_taxable_earnings_before_exemption
 				+ self.current_structured_taxable_earnings_before_exemption
@@ -1557,8 +1564,10 @@ class SalarySlip(TransactionBase):
 			self.full_tax_on_additional_earnings = self.total_tax_amount - self.total_structured_tax_amount
 
 		current_tax_amount = self.current_structured_tax_amount + self.full_tax_on_additional_earnings
+		
 		if flt(current_tax_amount) < 0:
 			current_tax_amount = 0
+
 
 		self._component_based_variable_tax[tax_component].update(
 			{
@@ -2196,7 +2205,6 @@ def calculate_tax_by_tax_slab(annual_taxable_earning, tax_slab, eval_globals=Non
 		elif annual_taxable_earning >= slab.from_amount and annual_taxable_earning >= slab.to_amount:
 			tax_amount += (slab.to_amount -amount_previusly_taxed) * slab.percent_deduction * 0.01
 			amount_previusly_taxed = slab.from_amount
-
 	for d in tax_slab.other_taxes_and_charges:
 		if flt(d.min_taxable_income) and flt(d.min_taxable_income) > annual_taxable_earning:
 			continue

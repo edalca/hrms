@@ -1,231 +1,170 @@
 frappe.ui.form.on("Employee Attendance Tool", {
 	refresh(frm) {
-		frm.trigger("reset_attendance_fields");
-		frm.trigger("load_employees");
+		frm.disable_save();
 		frm.trigger("set_primary_action");
 	},
 
 	onload(frm) {
-		frm.set_value("date", frappe.datetime.get_today());
+		if (!frm.doc.from_date) frm.set_value("from_date", frappe.datetime.get_today());
+		if (!frm.doc.to_date) frm.set_value("to_date", frappe.datetime.get_today());
 	},
 
-	date(frm) {
-		frm.trigger("load_employees");
+	fetch_employees(frm) {
+		frm.trigger("validate_and_load");
 	},
 
-	department(frm) {
-		frm.trigger("load_employees");
-	},
-
-	branch(frm) {
-		frm.trigger("load_employees");
-	},
-
-	company(frm) {
-		frm.trigger("load_employees");
-	},
-
-	status(frm) {
-		frm.trigger("set_primary_action");
-	},
-
-	reset_attendance_fields(frm) {
-		frm.set_value("status", "");
-		frm.set_value("shift", "");
-		frm.set_value("late_entry", 0);
-		frm.set_value("early_exit", 0);
-	},
-
-	load_employees(frm) {
-		if (!frm.doc.date) return;
-
-		frappe
-			.call({
-				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
-				args: {
-					date: frm.doc.date,
-					department: frm.doc.department,
-					branch: frm.doc.branch,
-					company: frm.doc.company,
-				},
-			})
-			.then((r) => {
-				frm.employees = r.message["unmarked"];
-
-				if (r.message["unmarked"].length > 0) {
-					unhide_field("unmarked_attendance_section");
-					unhide_field("attendance_details_section");
-					frm.events.show_unmarked_employees(frm, r.message["unmarked"]);
-				} else {
-					hide_field("unmarked_attendance_section");
-					hide_field("attendance_details_section");
-				}
-
-				if (r.message["marked"].length > 0) {
-					unhide_field("marked_attendance_html");
-					frm.events.show_marked_employees(frm, r.message["marked"]);
-				} else {
-					hide_field("marked_attendance_html");
-				}
-			});
-	},
-
-	show_unmarked_employees(frm, unmarked_employees) {
-		const $wrapper = frm.get_field("employees_html").$wrapper;
-		$wrapper.empty();
-		const employee_wrapper = $(`<div class="employee_wrapper">`).appendTo($wrapper);
-
-		frm.employees_multicheck = frappe.ui.form.make_control({
-			parent: employee_wrapper,
-			df: {
-				fieldname: "employees_multicheck",
-				fieldtype: "MultiCheck",
-				select_all: true,
-				columns: 4,
-				get_data: () => {
-					return unmarked_employees.map((employee) => {
-						return {
-							label: `${employee.employee} : ${employee.employee_name}`,
-							value: employee.employee,
-							checked: 0,
-						};
-					});
-				},
-			},
-			render_input: true,
-		});
-
-		frm.employees_multicheck.refresh_input();
-	},
-
-	show_marked_employees(frm, marked_employees) {
-		const $wrapper = frm.get_field("marked_attendance_html").$wrapper;
-		const summary_wrapper = $(`<div class="summary_wrapper">`).appendTo($wrapper);
-
-		const data = marked_employees.map((entry) => {
-			return [`${entry.employee} : ${entry.employee_name}`, entry.status];
-		});
-
-		frm.events.render_datatable(frm, data, summary_wrapper);
-	},
-
-	render_datatable(frm, data, summary_wrapper) {
-		const columns = frm.events.get_columns_for_marked_attendance_table(frm);
-
-		if (!frm.marked_emp_datatable) {
-			const datatable_options = {
-				columns: columns,
-				data: data,
-				dynamicRowHeight: true,
-				inlineFilters: true,
-				layout: "fluid",
-				cellHeight: 35,
-				noDataMessage: __("No Data"),
-				disableReorderColumn: true,
-			};
-			frm.marked_emp_datatable = new frappe.DataTable(
-				summary_wrapper.get(0),
-				datatable_options,
-			);
-		} else {
-			frm.marked_emp_datatable.refresh(data, columns);
+	validate_and_load(frm) {
+		if (!frm.doc.from_date || !frm.doc.to_date) {
+			frappe.msgprint(__("Please select the date range."));
+			return;
 		}
+		let diff = frappe.datetime.get_diff(frm.doc.to_date, frm.doc.from_date);
+		if (diff < 0 || diff >= 7) {
+			frappe.throw(__("The range must be between 1 and 7 days."));
+			return;
+		}
+		frm.trigger("load_attendance_grid");
 	},
 
-	get_columns_for_marked_attendance_table(frm) {
-		return [
-			{
-				name: "employee",
-				id: "employee",
-				content: __("Employee"),
-				editable: false,
-				sortable: false,
-				focusable: false,
-				dropdown: false,
-				align: "left",
-				width: 350,
+	load_attendance_grid(frm) {
+		frappe.call({
+			method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.get_employees",
+			args: {
+				from_date: frm.doc.from_date,
+				to_date: frm.doc.to_date,
+				department: frm.doc.department,
+				branch: frm.doc.branch,
+				company: frm.doc.company,
 			},
-			{
-				name: "status",
-				id: "status",
-				content: __("Status"),
-				editable: false,
-				sortable: false,
-				focusable: false,
-				dropdown: false,
-				align: "left",
-				width: 150,
-				format: (value) => {
-					if (value == "Present" || value == "Work From Home")
-						return `<span style="color:green">${__(value)}</span>`;
-					else if (value == "Absent")
-						return `<span style="color:red">${__(value)}</span>`;
-					else if (value == "Half Day")
-						return `<span style="color:orange">${__(value)}</span>`;
-					else if (value == "On Leave")
-						return `<span style="color:#318AD8">${__(value)}</span>`;
-				},
-			},
-		];
+			freeze: true,
+			callback: (r) => {
+				if (r.message) frm.events.render_grid(frm, r.message);
+			}
+		});
+	},
+
+	render_grid(frm, data) {
+		const field = frm.get_field("employees_html");
+		if (!field) return;
+
+		// Forzar visibilidad
+		if (field.parent_section) field.parent_section.show();
+		frm.set_df_property("employees_html", "hidden", 0);
+
+		const $wrapper = field.$wrapper;
+		$wrapper.empty();
+
+		let dates = [];
+		let current = moment(frm.doc.from_date);
+		let end = moment(frm.doc.to_date);
+		while (current <= end) {
+			dates.push(current.format("YYYY-MM-DD"));
+			current.add(1, 'days');
+		}
+
+		// Contenedor con Scroll (Aproximadamente 450px para 10 filas)
+		let table_html = `
+        <div class="attendance-scroll-container" style="
+            max-height: 450px; 
+            overflow-y: auto; 
+            overflow-x: auto; 
+            background: white;
+        ">
+            <table class="table table-bordered table-condensed" style="margin: 0; border: none;">
+                <thead>
+                    <tr style="position: sticky; top: 0; background: #f8f9fa; z-index: 10;">
+                        <th style="width: 30%; background: #f8f9fa; border-top: none;">${__("Employee")}</th>
+                        ${dates.map(d => `
+                            <th class="text-center" style="background: #f8f9fa; border-top: none; min-width: 85px;">
+								<div style="font-size: 11px; text-transform: capitalize;">
+									${__(moment(d).format('dddd')).substring(0, 3)}, ${moment(d).format('DD')} ${__(moment(d).format('MMMM')).substring(0, 3)}
+								</div>
+                                <input type="checkbox" class="grid-select-all-day" data-date="${d}">
+                            </th>
+                        `).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.employees.map(emp => `
+                        <tr>
+                            <td style="background: white;">
+                                <div style="font-weight: 500;">${emp.employee_name}</div>
+                                <small class="text-muted">${emp.name}</small>
+                            </td>
+						${dates.map(d => {
+			const employee_data = data.marked_dates[emp.name] || {};
+			const status = employee_data[d];
+			if (status) {
+				// Definimos colores según el status
+				let color_map = {
+					"Present": "green",
+					"Absent": "red",
+					"Half Day": "orange",
+					"On Leave": "#318AD8",
+					"Work From Home": "green"
+				};
+				let color = color_map[status] || "gray";
+
+				return `
+									<td class="text-center" style="vertical-align: middle;">
+										<span style="color: ${color}; font-weight: bold; font-size: 10px;">
+											${__(status)}
+										</span>
+									</td>`;
+			} else {
+				return `
+									<td class="text-center" style="vertical-align: middle;">
+										<input type="checkbox" class="attendance-check" 
+											data-employee="${emp.name}" data-date="${d}"
+											style="cursor: pointer;">
+									</td>`;
+			}
+		}).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+		$wrapper.html(table_html);
+		frm.events.bind_grid_events(frm, $wrapper);
+		frm.layout.refresh();
+	},
+
+	bind_grid_events(frm, $wrapper) {
+		$wrapper.find('.grid-select-all-day').on('change', function () {
+			let date = $(this).data('date');
+			let checked = $(this).is(':checked');
+			$wrapper.find(`.attendance-check[data-date="${date}"]`).prop('checked', checked);
+		});
 	},
 
 	set_primary_action(frm) {
-		frm.disable_save();
 		frm.page.set_primary_action(__("Mark Attendance"), () => {
-			if (frm.employees.length === 0) {
-				frappe.msgprint({
-					message: __(
-						"Attendance for all the employees under this criteria has been marked already.",
-					),
-					title: __("Attendance Marked"),
-					indicator: "green",
-				});
+			let selected = [];
+			frm.get_field("employees_html").$wrapper.find('.attendance-check:checked').each(function () {
+				selected.push({ employee: $(this).data('employee'), date: $(this).data('date') });
+			});
+
+			if (!selected.length || !frm.doc.status) {
+				frappe.throw(__("Select employees and status first."));
 				return;
 			}
 
-			if (frm.employees_multicheck.get_checked_options().length === 0) {
-				frappe.throw({
-					message: __("Please select the employees you want to mark attendance for."),
-					title: __("Mandatory"),
-				});
-			}
-
-			if (!frm.doc.status) {
-				frappe.throw({
-					message: __("Please select the attendance status."),
-					title: __("Mandatory"),
-				});
-			}
-
-			frm.trigger("mark_attendance");
-		});
-	},
-
-	mark_attendance(frm) {
-		const marked_employees = frm.employees_multicheck.get_checked_options();
-
-		frappe
-			.call({
-				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance",
+			frappe.call({
+				method: "hrms.hr.doctype.employee_attendance_tool.employee_attendance_tool.mark_employee_attendance_bulk",
 				args: {
-					employee_list: marked_employees,
+					attendance_data: selected,
 					status: frm.doc.status,
-					date: frm.doc.date,
-					late_entry: frm.doc.late_entry,
-					early_exit: frm.doc.early_exit,
-					shift: frm.doc.shift,
+					shift: frm.doc.shift
 				},
 				freeze: true,
-				freeze_message: __("Marking Attendance"),
-			})
-			.then((r) => {
-				if (!r.exc) {
-					frappe.show_alert({
-						message: __("Attendance marked successfully"),
-						indicator: "green",
-					});
-					frm.refresh();
+				callback: () => {
+					frappe.show_alert({ message: __("Success"), indicator: 'green' });
+					frm.trigger("load_attendance_grid");
 				}
 			});
-	},
+		});
+	}
 });

@@ -22,14 +22,15 @@
   "exchange_rate",
   "section_break_17",
   "branch",
-  "department",
   "employment_type",
-  "validate_attendance",
+  "get_employees",
   "column_break_21",
   "designation",
   "grade",
+  "column_break_mfhl",
+  "department",
   "number_of_employees",
-  "get_employees",
+  "validate_attendance",
   "section_break_24",
   "employees",
   "totals_section",
@@ -119,7 +120,7 @@
    "reqd": 1
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "validate_attendance",
    "fieldtype": "Check",
    "label": "Validate Attendance"
@@ -411,12 +412,16 @@
   {
    "fieldname": "column_break_cssf",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_mfhl",
+   "fieldtype": "Column Break"
   }
  ],
  "icon": "fa fa-cog",
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-24 17:23:19.214709",
+ "modified": "2026-01-19 22:44:51.467004",
  "modified_by": "Administrator",
  "module": "Payroll",
  "name": "Payroll Entry",
@@ -436,6 +441,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [
