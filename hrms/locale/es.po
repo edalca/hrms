@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: frappe-apps\n"
+"Project-Id-Version: frappe-hub\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2026-03-08 23:45\n"
+"PO-Revision-Date: 2026-03-17 05:34\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -11,17 +11,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.16.0\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Crowdin-Project: frappe-apps\n"
-"X-Crowdin-Project-ID: 878762\n"
+"X-Crowdin-Project: frappe-hub\n"
+"X-Crowdin-Project-ID: 881394\n"
 "X-Crowdin-Language: es-ES\n"
-"X-Crowdin-File: /[edalca.hrms] version-16/hrms/locale/main.pot\n"
-"X-Crowdin-File-ID: 47\n"
+"X-Crowdin-File: /version-16/hrms/locale/main.pot\n"
+"X-Crowdin-File-ID: 69\n"
 "Language: es_ES\n"
 
 #. Description of the 'Arrear Start Date' (Date) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid " Salary slips starting on or after this date will be considered for arrear calculations"
-msgstr " Se considerarán los deslizamientos salariales a partir o después de esta fecha para los cálculos en arreas"
+msgstr " Los Recibos de Salario que comiencen en esta fecha o después se considerarán para los cálculos de atrasos"
 
 #. Label of the unlink_payment_on_cancellation_of_employee_advance (Check)
 #. field in DocType 'HR Settings'
@@ -441,7 +441,7 @@ msgstr ""
 #. Label of the accrued_benefits (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Accrued Benefits"
-msgstr ""
+msgstr "Provisiones de Beneficios"
 
 #. Name of a report
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.json
@@ -2176,7 +2176,7 @@ msgstr ""
 
 #: hrms/public/js/erpnext/timesheet.js:8
 msgid "Create Salary Slip"
-msgstr "Crear nómina salarial"
+msgstr "Crear Recibo de Sueldo"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:97
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.js:175
@@ -2280,7 +2280,7 @@ msgstr "Aperturas Actuales"
 #. Label of the current_payroll_period (Link) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Current Payroll Period"
-msgstr ""
+msgstr "Periodo de Nómina Actual"
 
 #. Option for the 'Calculate Gratuity Amount Based On' (Select) field in
 #. DocType 'Gratuity Rule'
@@ -4965,7 +4965,7 @@ msgstr "Cálculo del impuesto sobre la renta"
 #. 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Income Tax Deducted Till Date"
-msgstr "Impuesto sobre la renta deducido hasta la fecha"
+msgstr "Impuesto Sobre la Renta Deducido hasta la Fecha"
 
 #. Name of a report
 #. Label of a Link in the Payroll Workspace
@@ -5004,21 +5004,21 @@ msgstr "La escala del impuesto sobre la renta es obligatoria ya que la estructur
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1869
 msgid "Income Tax Slab must be effective on or before Payroll Period Start Date: {0}"
-msgstr "Losa de impuesto sobre la renta debe entrar en vigencia a partir de la fecha de inicio del período de nómina: {0}"
+msgstr "La Tabla de Impuesto Sobre la Renta debe estar vigente en o antes de la Fecha de Inicio del Periodo de Nómina: {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1857
 msgid "Income Tax Slab not set in Salary Structure Assignment: {0}"
-msgstr "Losa de impuesto sobre la renta no se estableció en la asignación de estructura salarial: {0}"
+msgstr "La Tabla de Impuesto Sobre la Renta no está configurada en la Asignación de Estructura Salarial: {0}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1865
 msgid "Income Tax Slab: {0} is disabled"
-msgstr "Losa de impuestos sobre la renta: {0} está inhabilitado"
+msgstr "La Tabla de Impuesto Sobre la Renta: {0} está deshabilitada"
 
 #. Label of the income_from_other_sources (Currency) field in DocType 'Salary
 #. Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Income from Other Sources"
-msgstr "Ingresos de otras fuentes"
+msgstr "Ingresos de Otras Fuentes"
 
 #: hrms/hr/doctype/appraisal/appraisal.py:159 hrms/mixins/appraisal.py:20
 msgid "Incorrect Weightage Allocation"
@@ -5249,7 +5249,7 @@ msgstr "Fechas inválidas"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2646
 msgid "Invalid LWP Days Reversed"
-msgstr ""
+msgstr "Días de LSGS Revertidos no Válidos"
 
 #: hrms/hr/doctype/leave_ledger_entry/leave_ledger_entry.py:25
 msgid "Invalid Leave Ledger Entry"
@@ -5612,7 +5612,7 @@ msgstr "Área de resultados clave (ARC)"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2643
 msgid "LWP Days Reversed ({0}) does not match actual Payroll Corrections total ({1}) for employee {2} from {3} to {4}"
-msgstr ""
+msgstr "Los Días de LSGS Revertidos ({0}) no coinciden con el total real de Correcciones de Nómina ({1}) para el empleado {2} desde {3} hasta {4}"
 
 #. Option for the 'Allocate on Day' (Select) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5818,7 +5818,7 @@ msgstr "Panel de control de ausencias"
 #. Label of the leave_details (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Leave Details"
-msgstr "Detalles de Vacaciones "
+msgstr "Detalles de Licencias"
 
 #. Name of a DocType
 #. Label of a Link in the Leaves Workspace
@@ -5958,7 +5958,7 @@ msgstr "Plantilla de Estado de Notificación de Vacaciones"
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Leave Type"
-msgstr "Tipo de Vacaciones"
+msgstr "Tipo de Licencia"
 
 #. Label of the leave_type_name (Data) field in DocType 'Leave Type'
 #: hrms/hr/doctype/leave_type/leave_type.json
@@ -5994,11 +5994,11 @@ msgstr "Las vacaciones {0} no se pueden cobrar"
 #: hrms/payroll/report/salary_register/salary_register.py:179 hrms/setup.py:381
 #: hrms/setup.py:382
 msgid "Leave Without Pay"
-msgstr "Permiso / Vacaciones no remuneradas"
+msgstr "Licencia Sin Goce de Sueldo"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:509
 msgid "Leave Without Pay does not match with approved {} records"
-msgstr "Las vacaciones no remuneradas no coincide con los registros de {} aprobados"
+msgstr "Los días de Licencia Sin Goce de Sueldo no coinciden con los registros aprobados de {}"
 
 #: hrms/hr/doctype/leave_policy_assignment/leave_policy_assignment.py:130
 msgid "Leave allocation is skipped for {0}, because number of leaves to be allocated is 0."
@@ -6041,7 +6041,7 @@ msgstr "Permiso(s) vencido(s)"
 #. Label of the pending_leaves (Float) field in DocType 'Salary Slip Leave'
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
 msgid "Leave(s) Pending Approval"
-msgstr "Permiso(s) pendiente(s) de aprobación"
+msgstr "Licencia(s) Pendiente de Aprobación"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:67
 msgid "Leave(s) Taken"
@@ -6060,7 +6060,7 @@ msgstr "Permiso(s) utilizado(s)"
 #: hrms/hr/workspace/leaves/leaves.json
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Leaves"
-msgstr "Vacaciones"
+msgstr "Licencias"
 
 #: frontend/src/views/leave/Dashboard.vue:2
 msgid "Leaves & Holidays"
@@ -6663,11 +6663,11 @@ msgstr "No hay vacaciones asignadas al empleado: {0} para el tipo de vacaciones:
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:265
 msgid "No Salary Slip found for Employee: {0}"
-msgstr "No se ha encontrado ninguna nomina para el empleado: {0}"
+msgstr "No se encontró un Recibo de Salario para el Empleado: {0}"
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:81
 msgid "No Salary Slips with {0} found for employee {1} for payroll period {2}."
-msgstr ""
+msgstr "No se encontraron Recibos de Salario con {0} para el empleado {1} en el periodo de nómina {2}."
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:69
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
@@ -6715,7 +6715,7 @@ msgstr "No se encontraron anticipos"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:281
 msgid "No applicable Earning component found in last salary slip for Gratuity Rule: {0}"
-msgstr "No se ha encontrado ningún componente de ganancia aplicable en la última nómina para la regla de gratuidad: {0}"
+msgstr "No se encontró ningún componente de Ingreso aplicable en el último Recibo de Salario para la Regla de Gratificación: {0}"
 
 #: hrms/payroll/doctype/gratuity/gratuity.py:294
 msgid "No applicable Earning components found for Gratuity Rule: {0}"
@@ -6727,11 +6727,11 @@ msgstr "No se ha encontrado ninguna tabla aplicable para el cálculo del importe
 
 #: hrms/payroll/doctype/arrear/arrear.py:194
 msgid "No arrear components found in the existing salary slips."
-msgstr ""
+msgstr "No se encontraron componentes de retroactivo en los Recibos de Salario existentes."
 
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:160
 msgid "No arrear components found in the salary slip. Ensure Arrear Component is checked in the Salary Component master."
-msgstr ""
+msgstr "No se encontraron componentes de retroactivo en el Recibo de Salario. Asegúrate de que el Componente de Retroactivo esté marcado en el maestro de Componentes Salariales."
 
 #: hrms/payroll/doctype/arrear/arrear.py:407
 #: hrms/payroll/doctype/payroll_correction/payroll_correction.py:187
@@ -6813,15 +6813,15 @@ msgstr "No hay respuestas de"
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:1586
 msgid "No salary slip found to submit for the above selected criteria OR salary slip already submitted"
-msgstr "No se ha presentado ningún comprobante de sueldo para los criterios seleccionados anteriormente O recibo de sueldo ya enviado"
+msgstr "No se encontró ningún Recibo de Salario para los criterios seleccionados arriba O el Recibo de Salario ya fue enviado"
 
 #: frontend/src/views/salary_slip/Dashboard.vue:50
 msgid "No salary slips found"
-msgstr "No se encontraron nóminas"
+msgstr "No se encontraron Recibos de Salario"
 
 #: hrms/payroll/doctype/arrear/arrear.py:136
 msgid "No salary slips found for the selected employee from {0}"
-msgstr ""
+msgstr "No se encontraron Recibos de Salario para el empleado seleccionado desde {0}"
 
 #: frontend/src/components/ExpenseTaxesTable.vue:56
 msgid "No taxes added"
@@ -6848,7 +6848,7 @@ msgstr "No diario"
 #. Label of the non_taxable_earnings (Currency) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 msgid "Non Taxable Earnings"
-msgstr "Ganancias no sujetas a impuestos"
+msgstr "Ingresos No Gravables"
 
 #: hrms/hr/report/employee_hours_utilization_based_on_timesheet/employee_hours_utilization_based_on_timesheet.py:250
 msgid "Non-Billed Hours"
@@ -6880,7 +6880,7 @@ msgstr "Nota: El total de vacaciones asignadas {0} no debe ser menor que las vac
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2169
 msgid "Note: Your salary slip is password protected, the password to unlock the PDF is of the format {0}."
-msgstr "Nota: Su nómina está protegida por contraseña, la contraseña para desbloquear el PDF es del formato {0}."
+msgstr "Nota: Tu Recibo de Salario está protegido con contraseña. La contraseña para desbloquear el PDF tiene el formato {0}."
 
 #: hrms/hr/employee_property_update.js:176
 msgid "Nothing to change"
@@ -7293,7 +7293,7 @@ msgstr "Notificación Push"
 #. Outstanding Statement'
 #: hrms/hr/doctype/full_and_final_outstanding_statement/full_and_final_outstanding_statement.json
 msgid "Paid via Salary Slip"
-msgstr "Pagado mediante nómina"
+msgstr "Pagado mediante Recibo de Salario"
 
 #. Label of the parent_goal (Link) field in DocType 'Goal'
 #: hrms/hr/doctype/goal/goal.json
@@ -7326,7 +7326,7 @@ msgstr "La política de contraseña no puede contener espacios o guiones simult�
 
 #: hrms/payroll/doctype/payroll_settings/payroll_settings.py:22
 msgid "Password policy for Salary Slips is not set"
-msgstr "La política de contraseñas para recibos salariales no está establecida"
+msgstr "La política de contraseñas para los Recibos de Salario no está configurada"
 
 #. Label of the pay_rate_multipliers_section (Section Break) field in DocType
 #. 'Overtime Type'
@@ -7343,7 +7343,7 @@ msgstr ""
 #. Label of the pay_via_salary_slip (Check) field in DocType 'Gratuity'
 #: hrms/payroll/doctype/gratuity/gratuity.json
 msgid "Pay via Salary Slip"
-msgstr "Pagar mediante nómina"
+msgstr "Pagar mediante Recibo de Salario"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:137
 msgid "Payable Account is mandatory to submit an Expense Claim"
@@ -7930,7 +7930,7 @@ msgstr ""
 #: hrms/payroll/doctype/salary_structure/salary_structure.js:193
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.js:73
 msgid "Preview Salary Slip"
-msgstr "Previsualización de Nómina"
+msgstr "Vista Previa del Recibo de Salario"
 
 #. Label of the principal_amount (Currency) field in DocType 'Salary Slip Loan'
 #: hrms/payroll/doctype/salary_slip_loan/salary_slip_loan.json
@@ -7980,7 +7980,7 @@ msgstr "Procesar las solicitudes de turnos"
 #. Encashment'
 #: hrms/hr/doctype/leave_encashment/leave_encashment.json
 msgid "Process leave encashment via a separate Payment Entry instead of Salary Slip"
-msgstr ""
+msgstr "Procesar la liquidación de vacaciones mediante una Entrada de Pago separada en lugar del Recibo de Salario"
 
 #: hrms/hr/doctype/shift_assignment_tool/shift_assignment_tool.js:289
 msgid "Process {0} Shift Request(s) as <b>{1}</b>?"
@@ -8732,7 +8732,7 @@ msgstr "Registro de Salario"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/workspace/payroll/payroll.json hrms/setup.py:309
 msgid "Salary Slip"
-msgstr "Nómina"
+msgstr "Recibo de Salario"
 
 #. Label of the salary_slip_based_on_timesheet (Check) field in DocType
 #. 'Payroll Entry'
@@ -8744,11 +8744,11 @@ msgstr "Nómina"
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Salary Slip Based on Timesheet"
-msgstr "Nomina basada horas"
+msgstr "Recibo de Salario Basado en Hoja de Tiempo"
 
 #: hrms/payroll/report/salary_register/salary_register.py:113
 msgid "Salary Slip ID"
-msgstr "ID de Nómina"
+msgstr "ID del Recibo de Salario"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/salary_slip_leave/salary_slip_leave.json
