@@ -1,0 +1,40 @@
+name: Sync POT HRMS to Translation Hub
+
+on:
+  push:
+    branches:
+      - version-16
+    paths:
+      - 'hrms/locale/main.pot'
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Repo
+        uses: actions/checkout@v4
+
+      - name: Push to Translations Hub
+        env:
+          HUB_TOKEN: ${{ secrets.HUB_TRANSLATIONS_TOKEN }}
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+
+          git clone --branch version-16 https://$HUB_TOKEN@github.com/edalca/frappe-translations-hub.git hub_repo
+
+          mkdir -p hub_repo/hrms/locale
+          
+          cp hrms/locale/main.pot hub_repo/hrms/locale/main.pot
+          
+          cd hub_repo
+          git add .
+          
+          CURRENT_DATE=$(date +'%Y-%m-%d %H:%M:%S')
+          
+          if git commit -m "chore: update frappe v16 strings ($CURRENT_DATE)"; then
+            git push origin version-16
+            echo "✅ File successfully synchronized to Hub."
+          else
+            echo "⚠️ No new string changes detected."
+          fi
