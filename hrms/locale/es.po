@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe-hub\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2026-03-17 05:34\n"
+"PO-Revision-Date: 2026-03-20 09:25\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -410,19 +410,19 @@ msgstr "Atrasos Devengados"
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Accrual Component"
-msgstr ""
+msgstr "Componente de Acumulación"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:66
 msgid "Accrual Component can only be set for Earning Salary Components."
-msgstr ""
+msgstr "El Componente de Acumulación solo puede configurarse para Componentes Salariales de Ingreso."
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:86
 msgid "Accrual Component can only be set for Flexible Benefit Salary Components with accrual payout methods."
-msgstr ""
+msgstr "El Componente de Acumulación solo puede configurarse para Componentes Salariales de Beneficio Flexible con métodos de pago por acumulación."
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:78
 msgid "Accrual Component must be set for Flexible Benefit Salary Components with accrual payout methods."
-msgstr ""
+msgstr "El Componente de Acumulación solo puede configurarse para Componentes Salariales de Beneficio Flexible que utilicen métodos de pago por acumulación."
 
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.py:627
 msgid "Accrual Journal Entry for salaries from {0} to {1}"
@@ -431,12 +431,12 @@ msgstr "Entrada de Diario de Acumulación para Salarios de {0} a {1}"
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Accrue and payout at end of payroll period"
-msgstr ""
+msgstr "Acumular y pagar al final del período de nómina"
 
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Accrue per cycle, pay only on claim"
-msgstr ""
+msgstr "Acumular por ciclo y pagar únicamente contra reclamo"
 
 #. Label of the accrued_benefits (Table) field in DocType 'Salary Slip'
 #: hrms/payroll/doctype/salary_slip/salary_slip.json
@@ -446,11 +446,11 @@ msgstr "Provisiones de Beneficios"
 #. Name of a report
 #: hrms/payroll/report/accrued_earnings_report/accrued_earnings_report.json
 msgid "Accrued Earnings Report"
-msgstr ""
+msgstr "Informe de Ganancias Acumuladas"
 
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.py:99
 msgid "Accrued amount {0} is less than paid amount {1} for Benefit {2} in payroll period {3}"
-msgstr ""
+msgstr "El monto acumulado {0} es menor que el monto pagado {1} para el Beneficio {2} en el período de nómina {3}"
 
 #: hrms/hr/doctype/attendance_request/attendance_warnings.html:8
 msgid "Action on Submission"
@@ -478,7 +478,7 @@ msgstr "Días reales cobrables"
 #. Label of the actual_overtime_duration (Float) field in DocType 'Attendance'
 #: hrms/hr/doctype/attendance/attendance.json
 msgid "Actual Overtime Duration"
-msgstr ""
+msgstr "Duración Real de Horas Extras"
 
 #: hrms/hr/doctype/leave_application/leave_application.py:422
 msgid "Actual balances aren't available because the leave application spans over different leave allocations. You can still apply for leaves which would be compensated during the next allocation."
@@ -583,16 +583,16 @@ msgstr "Dirección del Organizador"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:51
 msgid "Adjust Allocation"
-msgstr ""
+msgstr "Ajustar Asignación"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:412
 msgid "Adjustment Created Successfully"
-msgstr ""
+msgstr "Ajuste Creado Exitosamente"
 
 #. Label of the adjustment_type (Select) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Adjustment Type"
-msgstr ""
+msgstr "Tipo de Ajuste"
 
 #. Option for the 'Level' (Select) field in DocType 'Training Event'
 #: hrms/hr/doctype/training_event/training_event.json
@@ -601,17 +601,17 @@ msgstr "Avanzar"
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:44
 msgid "Advance Account is mandatory. Please set the <a href=\"/app/company/{0}#default_employee_advance_account\" target=\"_blank\">Default Employee Advance Account</a> in the Company record {0} and submit this document."
-msgstr ""
+msgstr "La Cuenta de Anticipos es obligatoria. Por favor, configure la <a href='/app/company/{0}#default_employee_advance_account' target='_blank'>Cuenta de Anticipos de Empleados por Defecto</a> en el registro de la Empresa {0} y envíe este documento."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:79
 msgid "Advance Account {} currency should be same as Salary Currency of Employee {}. Please select same currency Advance Account"
-msgstr ""
+msgstr "La moneda de la Cuenta de Anticipo {} debe ser la misma que la Moneda Salarial del Empleado {}. Por favor selecciona una Cuenta de Anticipo con la misma moneda"
 
 #. Label of the base_advance_paid (Currency) field in DocType 'Expense Claim
 #. Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Advance Paid (Company Currency)"
-msgstr ""
+msgstr "Anticipo Pagado (Moneda de la Empresa)"
 
 #. Label of the advanced_filters_section (Section Break) field in DocType
 #. 'Leave Control Panel'
@@ -627,7 +627,7 @@ msgstr "Filtros Avanzados"
 
 #: hrms/hr/doctype/expense_claim/expense_claim.py:422
 msgid "All Exchange Gain/Loss amount of {0} has been booked through {1}"
-msgstr ""
+msgstr "Todo el monto de Ganancia/Pérdida por Diferencia Cambiaria de {0} ha sido contabilizado a través de {1}"
 
 #: hrms/hr/doctype/goal/goal_tree.js:215
 msgid "All Goals"
@@ -668,7 +668,7 @@ msgstr "Asignar el día"
 #. Claim Advance'
 #: hrms/hr/doctype/expense_claim_advance/expense_claim_advance.json
 msgid "Allocated Amount (Company Currency)"
-msgstr ""
+msgstr "Monto Asignado (Moneda de la Empresa)"
 
 #. Label of the allocated_leaves (Float) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
@@ -679,7 +679,7 @@ msgstr "Vacaciones Asignadas"
 #. Label of the allocated_via (Select) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocated Via"
-msgstr ""
+msgstr "Asignado a través de"
 
 #: hrms/hr/doctype/leave_control_panel/leave_control_panel.js:205
 msgid "Allocating Leave"
@@ -688,7 +688,7 @@ msgstr "Asignación de Permiso"
 #. Label of the allocation_date (Date) field in DocType 'Earned Leave Schedule'
 #: hrms/hr/doctype/earned_leave_schedule/earned_leave_schedule.json
 msgid "Allocation Date"
-msgstr ""
+msgstr "Fecha de Asignación"
 
 #. Label of the section_break_etvg (Section Break) field in DocType 'Leave
 #. Adjustment'
@@ -1185,12 +1185,12 @@ msgstr "¿Está seguro de que desea rechazar la Recomendación del empleado?"
 #. Name of a DocType
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrear"
-msgstr ""
+msgstr "Pagos atrasados"
 
 #. Label of the arrear_component (Check) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Arrear Component"
-msgstr ""
+msgstr "Componente de Pagos Atrasados"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:95
 msgid "Arrear Component cannot be set for Salary Components based on taxable salary."
@@ -3036,7 +3036,7 @@ msgstr "Información del empleado"
 #. Label of a Card Break in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Employee Journey"
-msgstr ""
+msgstr "Trayectoria del Empleado"
 
 #. Name of a report
 #. Label of a Link in the HR Workspace
@@ -3781,7 +3781,7 @@ msgstr "Formulario web del cuestionario de salida"
 #. Label of a quick_list in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Exits (This Month)"
-msgstr ""
+msgstr "Salidas (Este Mes)"
 
 #. Label of the expected_average_rating (Rating) field in DocType 'Interview'
 #. Label of the expected_average_rating (Rating) field in DocType 'Interview
@@ -6610,7 +6610,7 @@ msgstr "Nuevos comentarios"
 #. Label of a quick_list in the Tenure Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "New Hires (This Month)"
-msgstr ""
+msgstr "Nuevas Contrataciones (Este Mes)"
 
 #: hrms/hr/report/employee_leave_balance/employee_leave_balance.py:61
 msgid "New Leave(s) Allocated"
@@ -7199,7 +7199,7 @@ msgstr ""
 #. Label of the overtime_step (Select) field in DocType 'Payroll Entry'
 #: hrms/payroll/doctype/payroll_entry/payroll_entry.json
 msgid "Overtime Slip Step"
-msgstr ""
+msgstr "Paso del Comprobante de Horas Extra"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:491
 msgid "Overtime Slip Submission Error for {0}"
@@ -8019,7 +8019,7 @@ msgstr "Beneficios"
 #: hrms/hr/report/project_profitability/project_profitability.json
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "Project Profitability"
-msgstr ""
+msgstr "Rentabilidad del Proyecto"
 
 #. Label of a Card Break in the Performance Workspace
 #: hrms/hr/workspace/performance/performance.json
@@ -9885,7 +9885,7 @@ msgstr "Actualizaciones equipo"
 #. Name of a Workspace
 #: hrms/hr/workspace/tenure/tenure.json
 msgid "Tenure"
-msgstr ""
+msgstr "Antigüedad"
 
 #. Success message of the job-application Web Form
 #: hrms/hr/web_form/job_application/job_application.json
