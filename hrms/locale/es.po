@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: frappe-hub\n"
 "Report-Msgid-Bugs-To: contact@frappe.io\n"
 "POT-Creation-Date: 2025-12-21 09:37+0000\n"
-"PO-Revision-Date: 2026-03-20 09:25\n"
+"PO-Revision-Date: 2026-03-20 20:59\n"
 "Last-Translator: contact@frappe.io\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -694,7 +694,7 @@ msgstr "Fecha de Asignación"
 #. Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Allocation Details"
-msgstr ""
+msgstr "Detalles de Asignación"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.js:119
 msgid "Allocation Expired!"
@@ -702,12 +702,12 @@ msgstr "¡Asignación caducada!"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:60
 msgid "Allocation is greater than the maximum allowed {0} for leave type {1}"
-msgstr ""
+msgstr "La asignación es mayor que el máximo permitido {0} para el tipo de permiso {1}"
 
 #. Label of the leave_allocation (Link) field in DocType 'Leave Adjustment'
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.json
 msgid "Allocation to Adjust"
-msgstr ""
+msgstr "Asignación a Ajustar"
 
 #: hrms/hr/utils.py:438
 msgid "Allocation was skipped due to exceeding annual allocation set in leave policy"
@@ -780,7 +780,7 @@ msgstr "Permitir la salida después de la hora de finalización del turno (en mi
 #. Option for the 'Payout Method' (Select) field in DocType 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "Allow claim for full benefit amount"
-msgstr ""
+msgstr "Permitir reclamar el monto total del beneficio"
 
 #. Description of the 'Allow Users' (Section Break) field in DocType 'Leave
 #. Block List'
@@ -852,7 +852,7 @@ msgstr "Importe que se ha pagado contra este anticipo"
 
 #: hrms/payroll/doctype/arrear/arrear.py:92
 msgid "An Arrear document already exists for employee {0} with salary structure {1} in payroll period {2}"
-msgstr ""
+msgstr "Ya existe un documento de atrasos para el empleado {0} con la estructura salarial {1} en el período de nómina {2}"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:56
 msgid "An attendance record is linked to this checkin. Please cancel the attendance before modifying time."
@@ -897,7 +897,7 @@ msgstr "Componente de Ingresos Aplicables"
 #. DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Applicable Salary Components"
-msgstr ""
+msgstr "Componentes Salariales Aplicables"
 
 #. Description of the 'Required for Employee Creation' (Check) field in DocType
 #. 'Employee Boarding Activity'
@@ -980,12 +980,12 @@ msgstr "Aplicar Ahora"
 #. 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Apply for Public Holiday"
-msgstr ""
+msgstr "Solicitar Feriado Público"
 
 #. Label of the applicable_for_weekend (Check) field in DocType 'Overtime Type'
 #: hrms/hr/doctype/overtime_type/overtime_type.json
 msgid "Apply for Weekend"
-msgstr ""
+msgstr "Solicitar Fin de Semana"
 
 #. Label of the appointment_date (Date) field in DocType 'Appointment Letter'
 #: hrms/hr/doctype/appointment_letter/appointment_letter.json
@@ -1194,17 +1194,17 @@ msgstr "Componente de Pagos Atrasados"
 
 #: hrms/payroll/doctype/salary_component/salary_component.py:95
 msgid "Arrear Component cannot be set for Salary Components based on taxable salary."
-msgstr ""
+msgstr "El componente de atrasos no puede configurarse para componentes salariales basados en salario imponible."
 
 #. Label of the arrear_start_date (Date) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrear Start Date"
-msgstr ""
+msgstr "Fecha de inicio del Atraso"
 
 #. Label of the arrears_tab (Tab Break) field in DocType 'Arrear'
 #: hrms/payroll/doctype/arrear/arrear.json
 msgid "Arrears"
-msgstr ""
+msgstr "Atrasos"
 
 #. Label of the arrival_date (Datetime) field in DocType 'Travel Itinerary'
 #: hrms/hr/doctype/travel_itinerary/travel_itinerary.json
@@ -1562,7 +1562,7 @@ msgstr "Base"
 #. Structure Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Base & Variable"
-msgstr ""
+msgstr "Base & Variable"
 
 #. Label of the begin_check_in_before_shift_start_time (Int) field in DocType
 #. 'Shift Type'
@@ -1581,17 +1581,17 @@ msgstr "Beneficio"
 #. Label of the amount (Currency) field in DocType 'Employee Benefit Detail'
 #: hrms/payroll/doctype/employee_benefit_detail/employee_benefit_detail.json
 msgid "Benefit Amount"
-msgstr ""
+msgstr "Monto del Beneficio"
 
 #. Label of the employee_benefit_details_section (Section Break) field in
 #. DocType 'Employee Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Benefit Details"
-msgstr ""
+msgstr "Detalles de Beneficios"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:36
 msgid "Benefit amount of component {0} exceeds {1}"
-msgstr ""
+msgstr "El monto del beneficio del componente {0} excede {1}"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:30
 msgid "Benefit amount of component {0} should be greater than 0"
@@ -1599,7 +1599,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:451
 msgid "Benefit amount {0} for Salary Component {1} should not be greater than maximum benefit amount {2} set in {3}"
-msgstr ""
+msgstr "El monto del beneficio {0} para el Componente Salarial {1} no debe ser mayor que el monto máximo de beneficio {2} establecido en {3}"
 
 #. Label of the section_break_4 (Section Break) field in DocType 'Employee
 #. Benefit Application'
@@ -1950,7 +1950,7 @@ msgstr "Cantidad reclamada"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:34
 msgid "Claimed amount of employee {0} exceeds maximum amount eligible for claim {1}"
-msgstr ""
+msgstr "El monto reclamado del empleado {0} excede el monto máximo elegible para reclamar {1}"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:30
 msgid "Claimed amount of employee {0} should be greater than 0"
@@ -2802,7 +2802,7 @@ msgstr "Número de A / C del empleado"
 #: hrms/patches/v16_0/create_custom_field_for_employee_advance_in_employee_master.py:11
 #: hrms/setup.py:267
 msgid "Employee Advance Account"
-msgstr ""
+msgstr "Cuenta de Anticipos al Emplead"
 
 #: frontend/src/views/expense_claim/Dashboard.vue:35
 msgid "Employee Advance Balance"
@@ -3273,7 +3273,7 @@ msgstr "La transferencia de empleado no se puede validar antes de la fecha de tr
 #: hrms/hr/doctype/employee_advance/employee_advance.py:69
 #: hrms/hr/doctype/employee_advance/employee_advance.py:139
 msgid "Employee advance account {0} should be of type {1}."
-msgstr ""
+msgstr "La cuenta de anticipos al empleado {0} debe ser del tipo {1}."
 
 #: hrms/hr/doctype/hr_settings/hr_settings.js:27
 msgid "Employee can be named by Employee ID if you assign one, or via Naming Series. Select your preference here."
@@ -3456,7 +3456,7 @@ msgstr ""
 #. Benefit Ledger'
 #: hrms/payroll/doctype/employee_benefit_ledger/employee_benefit_ledger.json
 msgid "Enabled only for Employee Benefit components from Salary Structure Assignment"
-msgstr ""
+msgstr "Habilitado solo para componentes de Beneficios del Empleado desde la Asignación de Estructura Salarial"
 
 #: frontend/src/views/AppSettings.vue:40
 msgid "Enabling Push Notifications..."
@@ -3506,7 +3506,7 @@ msgstr "La hora de finalización no puede ser anterior a la hora de inicio"
 
 #: hrms/hr/doctype/job_applicant/job_applicant.js:86
 msgid "Enter Interview Round"
-msgstr ""
+msgstr "Ingresar Ronda de Entrevista"
 
 #: hrms/hr/doctype/leave_adjustment/leave_adjustment.py:48
 msgid "Enter a non-zero value to adjust."
@@ -3530,7 +3530,7 @@ msgstr "Introduzca el número de permisos que desea asignar para el periodo."
 #. Structure'
 #: hrms/payroll/doctype/salary_structure/salary_structure.json
 msgid "Enter yearly benefit amounts"
-msgstr ""
+msgstr "Ingresa los montos anuales del beneficio"
 
 #: frontend/src/components/FormField.vue:42
 msgid "Enter {0}"
@@ -3546,7 +3546,7 @@ msgstr "Error al eliminar {0}"
 
 #: frontend/src/utils/commonUtils.js:46
 msgid "Error downloading PDF"
-msgstr ""
+msgstr "Error al descargar PDF"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:1320
 msgid "Error in formula or condition"
@@ -4842,13 +4842,13 @@ msgstr "Si se activa, el valor especificado o calculado en este componente no co
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If enabled, this component allows to accrue amounts without adding them to earnings. The accrued balance is tracked in the Employee Benefit Ledger and can be paid out later as needed."
-msgstr ""
+msgstr "Si se habilita, este componente permite acumular montos sin añadirlos a las percepciones. El saldo acumulado se registra en el Libro de Beneficios del Empleado y puede pagarse posteriormente según sea necesario."
 
 #. Description of the 'Arrear Component' (Check) field in DocType 'Salary
 #. Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If enabled, this component will be included in arrear calculations"
-msgstr ""
+msgstr "Si se habilita, este componente se incluirá en los cálculos de atrasos"
 
 #. Description of the 'Include holidays in Total no. of Working Days' (Check)
 #. field in DocType 'Payroll Settings'
@@ -4860,7 +4860,7 @@ msgstr "Si está habilitado, el número total de días hábiles incluirá los d�
 #. 'Salary Component'
 #: hrms/payroll/doctype/salary_component/salary_component.json
 msgid "If greater than zero, this sets the maximum benefit amount assignable to any employee"
-msgstr ""
+msgstr "Si es mayor que cero, esto establece el monto máximo del beneficio asignable a cualquier empleado"
 
 #. Description of the 'Applies to Company' (Check) field in DocType 'Leave
 #. Block List'
@@ -4991,12 +4991,12 @@ msgstr "Deducciones del impuesto sobre la renta"
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "Income Tax Slab"
-msgstr "Losa de impuesto sobre la renta"
+msgstr "Tabla de Impuesto Sobre la Renta"
 
 #. Name of a DocType
 #: hrms/payroll/doctype/income_tax_slab_other_charges/income_tax_slab_other_charges.json
 msgid "Income Tax Slab Other Charges"
-msgstr "Impuesto sobre la renta Otros cargos de losa"
+msgstr "Otros Cargos de la Tabla de Impuesto Sobre la Renta"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:79
 msgid "Income Tax Slab is mandatory since the Salary Structure {0} has a tax component {1}"
@@ -5241,7 +5241,7 @@ msgstr ""
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:467
 msgid "Invalid Benefit Amounts"
-msgstr ""
+msgstr "Montos de beneficio no válidos"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:326
 msgid "Invalid Dates"
@@ -5388,7 +5388,7 @@ msgstr "Se retiene el salario"
 #: hrms/payroll/doctype/salary_component/salary_component.json
 #: hrms/payroll/doctype/salary_detail/salary_detail.json
 msgid "Is Tax Applicable"
-msgstr "Es Impuesto Aplicable"
+msgstr "¿Aplica Impuesto?"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:36
 #: hrms/public/js/salary_slip_deductions_report_filters.js:19
@@ -6361,7 +6361,7 @@ msgstr "Máximo las horas de trabajo contra la parte de horas"
 #. Assignment'
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.json
 msgid "Maximum Benefit Amount"
-msgstr ""
+msgstr "Monto Máximo del Beneficio"
 
 #. Label of the maximum_carry_forwarded_leaves (Float) field in DocType 'Leave
 #. Type'
@@ -6465,7 +6465,7 @@ msgstr "Días laborables mínimos requeridos desde la fecha de incorporación pa
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:47
 msgid "Missing Advance Account"
-msgstr ""
+msgstr "Falta la Cuenta de Anticipos"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:85
 msgid "Missing Mandatory Field"
@@ -6635,7 +6635,7 @@ msgstr "Después de esta fecha se crearán nuevas asignaciones de turnos."
 
 #: hrms/hr/doctype/employee_advance/employee_advance.py:375
 msgid "No Bank/Cash Account found for currency {0}. Please create one under company {1}."
-msgstr ""
+msgstr "No se encontró una cuenta bancaria o de efectivo para la moneda {0}. Por favor crea una bajo la compañía {1}."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:218
 msgid "No Employee Found"
@@ -6671,7 +6671,7 @@ msgstr "No se encontraron Recibos de Salario con {0} para el empleado {1} en el 
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:69
 msgid "No Salary Structure Assignment found for employee {0} on date {1}"
-msgstr ""
+msgstr "No se encontró una Asignación de Estructura Salarial para el empleado {0} en la fecha {1}"
 
 #: hrms/payroll/doctype/salary_withholding/salary_withholding.py:119
 msgid "No Salary Structure Assignment found for employee {0} on or before {1}"
@@ -6695,7 +6695,7 @@ msgstr "No se encontraron planes de personal para esta designación"
 
 #: hrms/payroll/doctype/arrear/arrear.py:71
 msgid "No active Salary Structure Assignment found for employee {0} with salary structure {1} on or after arrear start date {2}"
-msgstr ""
+msgstr "No se encontró una Asignación de Estructura Salarial activa para el empleado {0} con la estructura salarial {1} en o después de la fecha de inicio de atrasos {2}"
 
 #: frontend/src/views/InvalidEmployee.vue:8
 msgid "No active employee found associated with the email ID {0}. Try logging in with your employee email ID or contact your HR manager for access."
@@ -8655,7 +8655,7 @@ msgstr "Componente de salario para la nómina basada en hoja de salario."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:440
 msgid "Salary Component {0} cannot be selected more than once in Employee Benefits"
-msgstr ""
+msgstr "El componente salarial {0} no puede seleccionarse más de una vez en Beneficios del Empleado"
 
 #: hrms/payroll/doctype/salary_component/salary_component.js:113
 msgid "Salary Component {0} is currently not used in any Salary Structure."
@@ -8863,7 +8863,7 @@ msgstr "La asignación de estructura salarial para el empleado ya existe"
 
 #: hrms/payroll/doctype/employee_benefit_claim/employee_benefit_claim.py:223
 msgid "Salary Structure Assignment not found for employee {0} on date {1}"
-msgstr ""
+msgstr "No se encontró una Asignación de Estructura Salarial para el empleado {0} en la fecha {1}"
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:438
 msgid "Salary Structure Missing"
@@ -8875,7 +8875,7 @@ msgstr "La estructura salarial debe enviarse antes del envío de {0}"
 
 #: hrms/hr/doctype/overtime_slip/overtime_slip.py:92
 msgid "Salary Structure not assigned for employee {0} for date {1}"
-msgstr ""
+msgstr "La Estructura Salarial no está asignada para el empleado {0} en la fecha {1}"
 
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:70
 msgid "Salary Structure {0} does not belong to company {1}"
@@ -9746,7 +9746,7 @@ msgstr "Suma de todas las rentas anteriores"
 
 #: hrms/payroll/doctype/employee_benefit_application/employee_benefit_application.py:44
 msgid "Sum of benefit amounts {0} exceeds maximum limit of {1}"
-msgstr ""
+msgstr "La suma de los montos del beneficio {0} excede el límite máximo de {1}"
 
 #: hrms/hr/report/monthly_attendance_sheet/monthly_attendance_sheet.js:108
 msgid "Summarized View"
@@ -9835,7 +9835,7 @@ msgstr ""
 #. Name of a DocType
 #: hrms/payroll/doctype/taxable_salary_slab/taxable_salary_slab.json
 msgid "Taxable Salary Slab"
-msgstr "Losa Salarial Imponible"
+msgstr "Tabla Salarial Imponible"
 
 #. Label of the taxable_salary_slabs_section (Section Break) field in DocType
 #. 'Income Tax Slab'
@@ -9972,7 +9972,7 @@ msgstr "Existen más vacaciones que días de trabajo en este mes."
 
 #: hrms/payroll/doctype/arrear/arrear.py:384
 msgid "There are no arrear differences between existing and new salary structure components."
-msgstr ""
+msgstr "No hay diferencias de atrasos entre los componentes de la estructura salarial existente y la nueva."
 
 #: hrms/hr/doctype/job_offer/job_offer.py:39
 msgid "There are no vacancies under staffing plan {0}"
@@ -9982,7 +9982,7 @@ msgstr "No hay vacantes en el plan de personal {0}"
 #: hrms/payroll/doctype/employee_incentive/employee_incentive.py:20
 #: hrms/payroll/doctype/salary_structure_assignment/salary_structure_assignment.py:207
 msgid "There is no Salary Structure assigned to {0}. First assign a Salary Structure."
-msgstr ""
+msgstr "No hay una Estructura Salarial asignada a {0}. Primero asigna una Estructura Salarial."
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:392
 msgid "There's no Employee with Salary Structure: {0}. Assign {1} to an Employee to preview Salary Slip"
@@ -10443,7 +10443,7 @@ msgstr "Las vacaciones totales asignadas son obligatorias para el Tipo de Vacaci
 
 #: hrms/payroll/doctype/salary_structure/salary_structure.py:464
 msgid "Total of all employee benefits cannot be greater that Max Benefits Amount {0}"
-msgstr ""
+msgstr "El total de todos los beneficios del empleado no puede ser mayor que el Monto Máximo de Beneficios {0}"
 
 #. Description of the 'Year To Date' (Currency) field in DocType 'Salary
 #. Detail'
@@ -11374,7 +11374,7 @@ msgstr "{0} saldo"
 
 #: hrms/controllers/employee_reminders.py:253
 msgid "{0} completed {1} {2}"
-msgstr ""
+msgstr "{0} completado {1} {2}"
 
 #: frontend/src/components/FormView.vue:528
 msgid "{0} created successfully!"
@@ -11395,11 +11395,11 @@ msgstr "{0} tiene {1} habilitado"
 
 #: hrms/payroll/doctype/additional_salary/additional_salary.py:187
 msgid "{0} is an Accrual Component and this will be recorded as a payout in Employee Benefits Ledger"
-msgstr ""
+msgstr "{0} es un Componente de Acumulación y se registrará como un pago en el Libro Mayor de Beneficios del Empleado"
 
 #: hrms/hr/doctype/employee_checkin/employee_checkin.py:228
 msgid "{0} is an invalid Attendance Status."
-msgstr ""
+msgstr "{0} es un estado de asistencia no válido."
 
 #: hrms/hr/doctype/compensatory_leave_request/compensatory_leave_request.py:69
 msgid "{0} is not a holiday."
@@ -11419,7 +11419,7 @@ msgstr "{0} licencias asignadas con éxito"
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:563
 msgid "{0} leaves from allocation for {1} leave type have expired and will be processed during the next scheduled job. It is recommended to expire them now before creating new leave policy assignments."
-msgstr ""
+msgstr "Las {0} ausencias de la asignación para el tipo de ausencia {1} han expirado y se procesarán durante la próxima tarea programada. Se recomienda expirarlas ahora antes de crear nuevas asignaciones de políticas de ausencia."
 
 #: hrms/hr/doctype/leave_allocation/leave_allocation.py:356
 msgid "{0} leaves were manually allocated by {1} on {2}"
@@ -11464,7 +11464,7 @@ msgstr "{0} {1} {2}?"
 
 #: hrms/hr/utils.py:454
 msgid "{0}. Check error log for more details."
-msgstr ""
+msgstr "{0}. Revisa el registro de errores para más detalles."
 
 #: hrms/payroll/doctype/salary_slip/salary_slip.py:2190
 msgid "{0}: Employee email not found, hence email not sent"
@@ -11484,7 +11484,7 @@ msgstr "{0}d"
 #. Count format of shortcut in the Shift & Attendance Workspace
 #: hrms/hr/workspace/shift_&_attendance/shift_&_attendance.json
 msgid "{} "
-msgstr ""
+msgstr "{} "
 
 #. Count format of shortcut in the Recruitment Workspace
 #: hrms/hr/workspace/recruitment/recruitment.json
@@ -11501,12 +11501,12 @@ msgstr "{} Activo"
 #: hrms/payroll/workspace/payroll/payroll.json
 #: hrms/payroll/workspace/tax_&_benefits/tax_&_benefits.json
 msgid "{} Draft"
-msgstr ""
+msgstr "{} Borrador"
 
 #. Count format of shortcut in the Expenses Workspace
 #: hrms/hr/workspace/expenses/expenses.json
 msgid "{} Unclaimed"
-msgstr ""
+msgstr "{} Sin reclamar"
 
 #: hrms/hr/doctype/job_requisition/job_requisition.js:22
 msgid "{} {} open for this position."
