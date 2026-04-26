@@ -18,6 +18,34 @@ class DuplicationError(frappe.ValidationError):
 
 
 class JobApplicant(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		applicant_name: DF.Data
+		applicant_rating: DF.Rating
+		country: DF.Link | None
+		cover_letter: DF.Text | None
+		currency: DF.Link | None
+		designation: DF.Link | None
+		email_id: DF.Data
+		employee_referral: DF.Link | None
+		job_title: DF.Link | None
+		lower_range: DF.Currency
+		notes: DF.Data | None
+		phone_number: DF.Data | None
+		resume_attachment: DF.Attach | None
+		resume_link: DF.Data | None
+		source: DF.Link | None
+		source_name: DF.Link | None
+		status: DF.Literal["Open", "Replied", "Shortlisted", "Rejected", "Hold", "Accepted"]
+		upper_range: DF.Currency
+	# end: auto-generated types
+
 	def onload(self):
 		job_offer = frappe.get_all("Job Offer", filters={"job_applicant": self.name})
 		if job_offer:
@@ -58,30 +86,26 @@ class JobApplicant(Document):
 
 
 @frappe.whitelist()
-def create_interview(doc, interview_round):
-	import json
+def create_interview(job_applicant: str, interview_type: str) -> Document:
+	doc = frappe.get_doc("Job Applicant", job_applicant)
 
-	if isinstance(doc, str):
-		doc = json.loads(doc)
-		doc = frappe.get_doc(doc)
-
-	round_designation = frappe.db.get_value("Interview Round", interview_round, "designation")
+	round_designation = frappe.db.get_value("Interview Type", interview_type, "designation")
 
 	if round_designation and doc.designation and round_designation != doc.designation:
 		frappe.throw(
-			_("Interview Round {0} is only applicable for the Designation {1}").format(
-				interview_round, round_designation
+			_("Interview Type {0} is only applicable for the Designation {1}").format(
+				interview_type, round_designation
 			)
 		)
 
 	interview = frappe.new_doc("Interview")
-	interview.interview_round = interview_round
+	interview.interview_type = interview_type
 	interview.job_applicant = doc.name
 	interview.designation = doc.designation
 	interview.resume_link = doc.resume_link
 	interview.job_opening = doc.job_title
 
-	interviewers = get_interviewers(interview_round)
+	interviewers = get_interviewers(interview_type)
 	for d in interviewers:
 		interview.append("interview_details", {"interviewer": d.interviewer})
 
@@ -93,8 +117,11 @@ def get_interview_details(job_applicant):
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
-		fields=["name", "interview_round", "scheduled_on", "average_rating", "status"],
+		fields=["name", "interview_type", "scheduled_on", "average_rating", "status"],
 	)
+	if not interview_details:
+		return None
+
 	interview_detail_map = {}
 	meta = frappe.get_meta("Interview")
 	number_of_stars = meta.get_options("average_rating") or 5
