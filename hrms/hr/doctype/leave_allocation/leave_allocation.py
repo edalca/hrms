@@ -1,6 +1,6 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
-
+import datetime
 
 import frappe
 from frappe import _
@@ -317,7 +317,7 @@ class LeaveAllocation(Document):
 		create_leave_ledger_entry(self, args, submit)
 
 	@frappe.whitelist()
-	def allocate_leaves_manually(self, new_leaves, from_date=None):
+	def allocate_leaves_manually(self, new_leaves: str | float, from_date: str | datetime.date | None = None):
 		if from_date and not (getdate(self.from_date) <= getdate(from_date) <= getdate(self.to_date)):
 			frappe.throw(
 				_("Cannot allocate leaves outside the allocation period {0} - {1}").format(
@@ -396,7 +396,13 @@ class LeaveAllocation(Document):
 		return _get_monthly_earned_leave(doj, annual_allocation, frequency, rounding)
 
 	@frappe.whitelist()
-	def create_leave_adjustment(self, adjustment_type, leaves_to_adjust, posting_date, reason_for_adjustment):
+	def create_leave_adjustment(
+		self,
+		adjustment_type: str,
+		leaves_to_adjust: str | float,
+		posting_date: str | datetime.date,
+		reason_for_adjustment: str | None = None,
+	) -> None:
 		leave_adjustment = frappe.new_doc(
 			"Leave Adjustment",
 			employee=self.employee,
@@ -412,7 +418,7 @@ class LeaveAllocation(Document):
 		frappe.msgprint(_("Adjustment Created Successfully"), indicator="green", alert=True)
 
 	@frappe.whitelist()
-	def retry_failed_allocations(self, failed_allocations):
+	def retry_failed_allocations(self, failed_allocations: list) -> None:
 		if not frappe.has_permission(doctype="Leave Allocation", ptype="write", user=frappe.session.user):
 			frappe.throw(_("You do not have permission to complete this action"), frappe.PermissionError)
 

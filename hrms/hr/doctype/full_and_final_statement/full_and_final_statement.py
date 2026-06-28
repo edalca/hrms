@@ -275,7 +275,7 @@ class FullandFinalStatement(Document):
 
 
 @frappe.whitelist()
-def get_account_and_amount(ref_doctype, ref_document, company):
+def get_account_and_amount(ref_doctype: str, ref_document: str, company: str) -> list | None:
 	if not ref_doctype or not ref_document:
 		return None
 

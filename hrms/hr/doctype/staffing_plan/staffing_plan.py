@@ -1,6 +1,7 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
 
+import datetime
 
 import frappe
 from frappe import _
@@ -170,7 +171,7 @@ class StaffingPlan(Document):
 			)
 
 	@frappe.whitelist()
-	def set_job_requisitions(self, job_reqs):
+	def set_job_requisitions(self, job_reqs: list[str]) -> Document:
 		if job_reqs:
 			requisitions = frappe.db.get_list(
 				"Job Requisition",
@@ -195,7 +196,7 @@ class StaffingPlan(Document):
 
 
 @frappe.whitelist()
-def get_designation_counts(designation, company, job_opening=None):
+def get_designation_counts(designation: str, company: str, job_opening: str | None = None) -> dict | bool:
 	if not designation:
 		return False
 
@@ -216,7 +217,12 @@ def get_designation_counts(designation, company, job_opening=None):
 
 
 @frappe.whitelist()
-def get_active_staffing_plan_details(company, designation, from_date=None, to_date=None):
+def get_active_staffing_plan_details(
+	company: str,
+	designation: str,
+	from_date: str | datetime.date | None = None,
+	to_date: str | datetime.date | None = None,
+) -> list[dict] | None:
 	if from_date is None:
 		from_date = getdate(nowdate())
 	if to_date is None:

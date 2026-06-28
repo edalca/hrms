@@ -108,7 +108,9 @@ class Interview(Document):
 		return status_map.get(self.status, None)
 
 	@frappe.whitelist()
-	def reschedule_interview(self, scheduled_on, from_time, to_time):
+	def reschedule_interview(
+		self, scheduled_on: datetime.date, from_time: datetime.time, to_time: datetime.time
+	) -> None:
 		if scheduled_on == self.scheduled_on and from_time == self.from_time and to_time == self.to_time:
 			frappe.msgprint(
 				_("No changes found in timings."), indicator="orange", title=_("Interview Not Rescheduled")
@@ -175,6 +177,8 @@ def get_recipients(name, for_feedback=0):
 
 @frappe.whitelist()
 def get_feedback(interview: str) -> list[dict]:
+	frappe.has_permission("Interview Feedback", "read", throw=True)
+
 	interview_feedback = frappe.qb.DocType("Interview Feedback")
 	employee = frappe.qb.DocType("Employee")
 
@@ -342,7 +346,7 @@ def get_expected_skill_set(interview_type: str) -> list[dict]:
 
 
 @frappe.whitelist()
-def create_interview_feedback(data, interview_name, interviewer, job_applicant):
+def create_interview_feedback(data: str | dict, interview_name: str, interviewer: str, job_applicant: str):
 	import json
 
 	if isinstance(data, str):
@@ -375,7 +379,9 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_interviewer_list(doctype, txt, searchfield, start, page_len, filters):
+def get_interviewer_list(
+	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
+) -> list:
 	filters = [
 		["Has Role", "parent", "like", f"%{txt}%"],
 		["Has Role", "role", "=", "interviewer"],
@@ -396,7 +402,7 @@ def get_interviewer_list(doctype, txt, searchfield, start, page_len, filters):
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None):
+def get_events(start: str, end: str, filters: str | None = None):
 	"""Returns events for Gantt / Calendar view rendering.
 
 	:param start: Start date-time.

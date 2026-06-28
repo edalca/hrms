@@ -155,18 +155,11 @@ class LeaveApplication(Document, PWANotificationsMixin):
 			leave_type = frappe.get_doc("Leave Type", self.leave_type)
 			if leave_type.applicable_after > 0:
 				date_of_joining = frappe.db.get_value("Employee", self.employee, "date_of_joining")
-				leave_days = get_approved_leaves_for_period(
-					self.employee, False, date_of_joining, self.from_date
-				)
 				number_of_days = date_diff(getdate(self.from_date), date_of_joining)
 				if number_of_days >= 0:
-					holidays = 0
-					if not frappe.db.get_value("Leave Type", self.leave_type, "include_holiday"):
-						holidays = get_holidays(self.employee, date_of_joining, self.from_date)
-					number_of_days = number_of_days - leave_days - holidays
 					if number_of_days < leave_type.applicable_after:
 						frappe.throw(
-							_("{0} applicable after {1} working days").format(
+							_("{0} applicable after {1} calendar days").format(
 								self.leave_type, leave_type.applicable_after
 							)
 						)
@@ -930,9 +923,7 @@ def get_number_of_leave_days(
 		number_of_days = date_diff(to_date, from_date) + 1
 
 	if not frappe.db.get_value("Leave Type", leave_type, "include_holiday"):
-		number_of_days = flt(number_of_days) - flt(
-			get_holidays(employee, from_date, to_date, holiday_list=holiday_list)
-		)
+		number_of_days = flt(number_of_days) - flt(get_holidays(employee, from_date, to_date))
 	return number_of_days
 
 
@@ -985,7 +976,7 @@ def get_leave_balance_on(
 	to_date: datetime.date | None = None,
 	consider_all_leaves_in_the_allocation_period: bool = False,
 	for_consumption: bool = False,
-):
+) -> dict[str, float]:
 	"""
 	Returns leave balance till date
 	:param employee: employee name
@@ -1288,7 +1279,7 @@ def get_leave_entries(employee, leave_type, from_date, to_date):
 
 
 @frappe.whitelist()
-def get_holidays(employee, from_date, to_date, holiday_list=None):
+def get_holidays(employee: str, from_date: str | datetime.date, to_date: str | datetime.date) -> int:
 	"""get holidays between two dates for the given employee"""
 	holidays = get_holiday_dates_between_range(employee, from_date, to_date)
 	return len(holidays)
@@ -1300,7 +1291,7 @@ def is_lwp(leave_type):
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None):
+def get_events(start: str, end: str, filters: str | None = None) -> list[dict]:
 	import json
 
 	filters = json.loads(filters)
@@ -1421,7 +1412,7 @@ def add_holidays(events, start, end, employee, company):
 
 
 @frappe.whitelist()
-def get_mandatory_approval(doctype):
+def get_mandatory_approval(doctype: str) -> str | int | bool:
 	mandatory = ""
 	if doctype == "Leave Application":
 		mandatory = frappe.db.get_single_value("HR Settings", "leave_approver_mandatory_in_leave_application")
@@ -1477,7 +1468,7 @@ def get_approved_leaves_for_period(employee, leave_type, from_date, to_date):
 
 
 @frappe.whitelist()
-def get_leave_approver(employee):
+def get_leave_approver(employee: str) -> str:
 	leave_approver, department = frappe.db.get_value("Employee", employee, ["leave_approver", "department"])
 
 	if not leave_approver and department:

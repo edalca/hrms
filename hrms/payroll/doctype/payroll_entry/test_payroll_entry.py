@@ -15,7 +15,7 @@ from hrms.hr.doctype.employee_advance.employee_advance import (
 )
 from hrms.hr.doctype.employee_advance.test_employee_advance import (
 	make_employee_advance,
-	make_journal_entry_for_advance,
+	make_payment_entry,
 )
 from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 	PayrollEntry,
@@ -444,6 +444,41 @@ class TestPayrollEntry(HRMSTestSuite):
 		journal_entries = get_linked_journal_entries(payroll_entry.name, docstatus=2)
 		self.assertEqual(len(journal_entries), 2)
 
+	def test_payroll_entry_cancellation_with_hr_manager(self):
+		company_doc = frappe.get_doc("Company", "_Test Company")
+		employee = make_employee("test_hr_manager_employee@payroll.com", company=company_doc.name)
+
+		setup_salary_structure(employee, company_doc)
+		dates = get_start_end_dates("Monthly", nowdate())
+		payroll_entry = make_payroll_entry(
+			start_date=dates.start_date,
+			end_date=dates.end_date,
+			payable_account=company_doc.default_payroll_payable_account,
+			currency=company_doc.default_currency,
+			company=company_doc.name,
+			cost_center="Main - _TC",
+			payment_account="Cash - _TC",
+		)
+
+		hr_user = frappe.get_doc(
+			{
+				"doctype": "User",
+				"email": "test_hr_manager@payroll.com",
+				"first_name": "Test HR Manager",
+				"enabled": 1,
+			}
+		).insert(ignore_if_duplicate=True)
+		hr_user.add_roles("HR Manager")
+		frappe.set_user(hr_user.name)
+
+		payroll_entry.submit()
+		self.assertEqual(payroll_entry.status, "Submitted")
+
+		payroll_entry.cancel()
+		self.assertEqual(payroll_entry.status, "Cancelled")
+
+		frappe.set_user("Administrator")
+
 	def test_payroll_entry_status(self):
 		company_doc = frappe.get_doc("Company", "_Test Company")
 		employee = make_employee("test_employee@payroll.com", company=company_doc.name)
@@ -574,8 +609,7 @@ class TestPayrollEntry(HRMSTestSuite):
 
 		# create employee advance
 		advance = make_employee_advance(employee, {"repay_unclaimed_amount_from_salary": 1})
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
+		make_payment_entry(advance)
 		advance.reload()
 
 		# return advance through additional salary (deduction)
@@ -838,6 +872,63 @@ class TestPayrollEntry(HRMSTestSuite):
 		total_credit = bank_entry[0].get("total_credit", 0)
 		self.assertEqual(total_debit, expected_bank_entry_amount)
 		self.assertEqual(total_credit, expected_bank_entry_amount)
+
+	@if_lending_app_installed
+	@HRMSTestSuite.change_settings(
+		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}
+	)
+	def test_loan_repayment_value_date_for_future_payroll(self):
+		from lending.loan_management.doctype.loan.test_loan import make_loan_disbursement_entry
+		from lending.tests.test_utils import create_loan
+
+		frappe.db.delete("Loan")
+		applicant, branch, currency, payroll_payable_account = setup_lending()
+
+		loan = create_loan(
+			applicant,
+			"Car Loan",
+			280000,
+			"Repay Over Number of Periods",
+			20,
+			applicant_type="Employee",
+			posting_date="2026-06-02",
+			repayment_start_date="2026-07-05",
+		)
+		loan.repay_from_salary = 1
+		loan.submit()
+
+		make_loan_disbursement_entry(
+			loan.name,
+			loan.loan_amount,
+			disbursement_date="2026-06-02",
+			repayment_start_date="2026-07-05",
+		)
+
+		# July 2026 payroll — end_date 2026-07-31 covers the 2026-07-05 demand
+		payroll_entry = make_payroll_entry(
+			company="_Test Company",
+			start_date="2026-07-01",
+			end_date="2026-07-31",
+			payable_account=payroll_payable_account,
+			currency=currency,
+			branch=branch,
+			cost_center="Main - _TC",
+			payment_account="Cash - _TC",
+		)
+
+		salary_slip_name = frappe.db.get_value(
+			"Salary Slip", {"payroll_entry": payroll_entry.name, "employee": applicant}, "name"
+		)
+		loan_repayment_name = frappe.db.get_value(
+			"Salary Slip Loan", {"parent": salary_slip_name}, "loan_repayment_entry"
+		)
+
+		lr_value_date, lr_interest_payable = frappe.db.get_value(
+			"Loan Repayment", loan_repayment_name, ["value_date", "interest_payable"]
+		)
+
+		self.assertEqual(getdate(lr_value_date), getdate("2026-07-31"))
+		self.assertGreater(flt(lr_interest_payable), 0)
 
 	@HRMSTestSuite.change_settings(
 		"Payroll Settings", {"process_payroll_accounting_entry_based_on_employee": 0}

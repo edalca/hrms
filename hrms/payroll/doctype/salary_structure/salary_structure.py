@@ -1,6 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
+import datetime
 import re
 
 import frappe
@@ -171,17 +172,17 @@ class SalaryStructure(Document):
 	@frappe.whitelist()
 	def assign_salary_structure(
 		self,
-		branch=None,
-		grade=None,
-		department=None,
-		designation=None,
-		employee=None,
-		payroll_payable_account=None,
-		from_date=None,
-		base=None,
-		variable=None,
-		income_tax_slab=None,
-	):
+		branch: str | None = None,
+		grade: str | None = None,
+		department: str | None = None,
+		designation: str | None = None,
+		employee: str | None = None,
+		payroll_payable_account: str | None = None,
+		from_date: str | None = None,
+		base: float | None = None,
+		variable: float | None = None,
+		income_tax_slab: str | None = None,
+	) -> None:
 		employees = self.get_employees(
 			company=self.company,
 			grade=grade,
@@ -332,16 +333,15 @@ def get_existing_assignments(employees, salary_structure, from_date):
 
 @frappe.whitelist()
 def make_salary_slip(
-	source_name,
-	target_doc=None,
-	employee=None,
-	posting_date=None,
-	as_print=False,
-	print_format=None,
-	for_preview=0,
-	ignore_permissions=False,
-	lwp_days_corrected=None,
-):
+	source_name: str,
+	target_doc: str | Document | None = None,
+	employee: str | None = None,
+	posting_date: str | datetime.date | None = None,
+	as_print: bool = False,
+	print_format: str | None = None,
+	for_preview: int = 0,
+	lwp_days_corrected: float | None = None,
+) -> str | Document:
 	def postprocess(source, target):
 		if employee:
 			target.employee = employee
@@ -368,7 +368,6 @@ def make_salary_slip(
 		target_doc,
 		postprocess,
 		ignore_child_tables=True,
-		ignore_permissions=ignore_permissions,
 		cached=True,
 	)
 
@@ -380,7 +379,7 @@ def make_salary_slip(
 
 
 @frappe.whitelist()
-def get_employees(salary_structure):
+def get_employees(salary_structure: str) -> list[str]:
 	employees = frappe.get_list(
 		"Salary Structure Assignment",
 		filters={"salary_structure": salary_structure, "docstatus": 1},
@@ -398,7 +397,9 @@ def get_employees(salary_structure):
 
 
 @frappe.whitelist()
-def get_salary_component(doctype, txt, searchfield, start, page_len, filters):
+def get_salary_component(
+	doctype: str, txt: str, searchfield: str, start: int, page_len: int, filters: dict
+) -> list:
 	sc = frappe.qb.DocType("Salary Component")
 	sca = frappe.qb.DocType("Salary Component Account")
 

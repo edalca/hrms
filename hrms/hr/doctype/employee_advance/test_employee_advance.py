@@ -11,10 +11,10 @@ from erpnext.setup.doctype.employee.test_employee import make_employee
 from hrms.hr.doctype.employee_advance.employee_advance import (
 	EmployeeAdvanceOverPayment,
 	create_return_through_additional_salary,
-	make_bank_entry,
+	get_same_currency_bank_cash_account,
 	make_return_entry,
 )
-from hrms.hr.doctype.expense_claim.expense_claim import get_advances
+from hrms.hr.doctype.expense_claim.expense_claim import get_advances, get_expense_claim
 from hrms.hr.doctype.expense_claim.test_expense_claim import (
 	get_payable_account,
 	make_expense_claim,
@@ -35,7 +35,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name)
 
-		journal_entry = make_journal_entry_for_advance(advance)
+		journal_entry = manual_journal_entry_for_advance(advance)
 		journal_entry.submit()
 
 		advance.reload()
@@ -44,22 +44,19 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(advance.status, "Paid")
 
 		# try making over payment
-		journal_entry1 = make_journal_entry_for_advance(advance)
+		journal_entry1 = manual_journal_entry_for_advance(advance)
 		self.assertRaises(EmployeeAdvanceOverPayment, journal_entry1.submit)
 
 	def test_paid_amount_on_pe_cancellation(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name)
-
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
-
+		payment_entry = make_payment_entry(advance)
 		advance.reload()
 
 		self.assertEqual(advance.paid_amount, 1000)
 		self.assertEqual(advance.status, "Paid")
 
-		journal_entry.cancel()
+		payment_entry.cancel()
 		advance.reload()
 
 		self.assertEqual(advance.paid_amount, 0)
@@ -77,8 +74,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
+		make_payment_entry(advance)
 
 		claim = get_advances_for_claim(claim, advance.name)
 		claim.save()
@@ -107,8 +103,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
+		make_payment_entry(advance)
 
 		# PARTLY CLAIMED AND RETURNED status check
 		# 500 Claimed, 500 Returned
@@ -117,8 +112,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		)
 
 		advance = make_employee_advance(claim.employee)
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
+		make_payment_entry(advance)
 
 		claim = get_advances_for_claim(claim, advance.name, amount=500)
 		claim.save()
@@ -165,8 +159,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 	def test_repay_unclaimed_amount_from_salary(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name, {"repay_unclaimed_amount_from_salary": 1})
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
+		make_payment_entry(advance)
 
 		args = {"type": "Deduction"}
 		create_salary_component("Advance Salary - Deduction", **args)
@@ -213,7 +206,7 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		pe = make_payment_entry(advance, 700)
 		advance.reload()
-		self.assertEqual(advance.status, "Unpaid")
+		self.assertEqual(advance.status, "Partially Paid")
 		self.assertEqual(advance.paid_amount, 700)
 
 		pe = make_payment_entry(advance, 300)
@@ -223,14 +216,57 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		pe.cancel()
 		advance.reload()
-		self.assertEqual(advance.status, "Unpaid")
+		self.assertEqual(advance.status, "Partially Paid")
 		self.assertEqual(advance.paid_amount, 700)
+
+	def test_expense_claim_against_partially_paid_advance(self):
+		employee_name = make_employee("_T@employee.advance", "_Test Company")
+		advance = make_employee_advance(employee_name)
+		make_payment_entry(advance, 700)
+		advance.reload()
+
+		self.assertEqual(advance.status, "Partially Paid")
+
+		currency, cost_center = frappe.db.get_value(
+			"Company", "_Test Company", ["default_currency", "cost_center"]
+		)
+		claim = get_expense_claim(advance.name)  # create claim from employee advance form
+		claim.update(
+			{
+				"payable_account": get_payable_account("_Test Company"),
+				"currency": currency,
+				"exchange_rate": 1,
+				"approval_status": "Approved",
+			}
+		)
+		claim.append(
+			"expenses",
+			{
+				"expense_type": "Travel",
+				"default_account": "Travel Expenses - _TC",
+				"amount": 1000,
+				"sanctioned_amount": 1000,
+				"cost_center": cost_center,
+			},
+		)
+		claim.save()
+		claim.submit()
+
+		self.assertEqual(len(claim.advances), 1)
+		self.assertEqual(claim.advances[0].employee_advance, advance.name)
+		self.assertEqual(claim.advances[0].advance_paid, 700)
+		self.assertEqual(claim.advances[0].allocated_amount, 700)
+		self.assertEqual(claim.total_claimed_amount, 1000)
+		self.assertEqual(claim.grand_total, 300)
+
+		advance.reload()
+		self.assertEqual(advance.claimed_amount, 700)
+		self.assertEqual(advance.status, "Claimed")
 
 	def test_precision(self):
 		employee_name = make_employee("_T@employee.advance", "_Test Company")
 		advance = make_employee_advance(employee_name)
-		journal_entry = make_journal_entry_for_advance(advance)
-		journal_entry.submit()
+		make_payment_entry(advance)
 
 		# PARTLY CLAIMED AND RETURNED
 		payable_account = get_payable_account("_Test Company")
@@ -269,6 +305,8 @@ class TestEmployeeAdvance(HRMSTestSuite):
 
 		advance1 = make_employee_advance(employee_name)
 		make_payment_entry(advance1, 500)
+		advance1.reload()
+		self.assertEqual(advance1.status, "Partially Paid")
 
 		advance2 = make_employee_advance(employee_name)
 		# 1000 - 500
@@ -375,26 +413,55 @@ class TestEmployeeAdvance(HRMSTestSuite):
 		self.assertEqual(advance.status, "Cancelled")
 
 
-def make_journal_entry_for_advance(advance):
-	frappe.db.set_single_value("Accounts Settings", "make_payment_via_journal_entry", True)
-	journal_entry = frappe.get_doc(make_bank_entry("Employee Advance", advance.name))
-	journal_entry.cheque_no = "123123"
-	journal_entry.cheque_date = nowdate()
-	journal_entry.save()
+def manual_journal_entry_for_advance(advance) -> dict:
+	doc = frappe.get_doc("Employee Advance", advance.name)
+	payment_account = get_same_currency_bank_cash_account(doc.company, doc.currency, doc.mode_of_payment)
 
-	return journal_entry
+	je = frappe.new_doc("Journal Entry")
+	je.posting_date = nowdate()
+	je.voucher_type = "Bank Entry"
+	je.company = doc.company
+	je.remark = "Payment against Employee Advance: " + advance.name + "\n" + doc.purpose
+	je.multi_currency = 1 if doc.currency != erpnext.get_company_currency(doc.company) else 0
+
+	je.append(
+		"accounts",
+		{
+			"account": doc.advance_account,
+			"account_currency": doc.currency,
+			"debit_in_account_currency": flt(doc.advance_amount),
+			"reference_type": "Employee Advance",
+			"reference_name": doc.name,
+			"party_type": "Employee",
+			"cost_center": erpnext.get_default_cost_center(doc.company),
+			"party": doc.employee,
+			"is_advance": "Yes",
+		},
+	)
+
+	je.append(
+		"accounts",
+		{
+			"account": payment_account.account or payment_account.name,
+			"cost_center": erpnext.get_default_cost_center(doc.company),
+			"credit_in_account_currency": flt(doc.advance_amount),
+			"account_currency": doc.currency,
+			"account_type": payment_account.account_type,
+		},
+	)
+	je.cheque_no = "123123"
+	je.cheque_date = nowdate()
+	je.save()
+	return je
 
 
 def make_payment_entry(advance, amount=None):
-	frappe.db.set_single_value("Accounts Settings", "make_payment_via_journal_entry", False)
 	from hrms.overrides.employee_payment_entry import get_payment_entry_for_employee
 
-	payment_entry = get_payment_entry_for_employee(advance.doctype, advance.name)
+	payment_entry = get_payment_entry_for_employee(advance.doctype, advance.name, party_amount=amount)
 
 	payment_entry.reference_no = "1"
 	payment_entry.reference_date = nowdate()
-	if amount:
-		payment_entry.references[0].allocated_amount = amount
 	payment_entry.submit()
 	return payment_entry
 

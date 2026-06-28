@@ -317,7 +317,6 @@ class OvertimeSlip(Document):
 		return make_salary_slip(
 			salary_structure,
 			employee=self.employee,
-			ignore_permissions=True,
 			posting_date=self.start_date,
 		)
 
@@ -392,7 +391,6 @@ class OvertimeSlip(Document):
 		return details
 
 
-@frappe.whitelist()
 def filter_employees_for_overtime_slip_creation(start_date, end_date, employees, limit=None):
 	if not employees:
 		return []

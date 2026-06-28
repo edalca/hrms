@@ -61,7 +61,7 @@ class ExitInterview(Document):
 
 
 @frappe.whitelist()
-def send_exit_questionnaire(interviews):
+def send_exit_questionnaire(interviews: str | list) -> None:
 	interviews = get_interviews(interviews)
 	validate_questionnaire_settings()
 

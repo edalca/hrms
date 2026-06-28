@@ -113,7 +113,7 @@ def create_interview(job_applicant: str, interview_type: str) -> Document:
 
 
 @frappe.whitelist()
-def get_interview_details(job_applicant):
+def get_interview_details(job_applicant: str) -> dict:
 	interview_details = frappe.db.get_all(
 		"Interview",
 		filters={"job_applicant": job_applicant, "docstatus": ["!=", 2]},
@@ -135,7 +135,7 @@ def get_interview_details(job_applicant):
 
 
 @frappe.whitelist()
-def get_applicant_to_hire_percentage():
+def get_applicant_to_hire_percentage() -> dict:
 	frappe.has_permission("Job Applicant", throw=True)
 
 	total_applicants = frappe.db.count("Job Applicant")

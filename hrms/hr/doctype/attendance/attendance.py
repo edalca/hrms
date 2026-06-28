@@ -397,7 +397,9 @@ def process_bulk_attendance_in_batches(data, chunk_size=20):
 
 
 @frappe.whitelist()
-def get_unmarked_days(employee, from_date, to_date, exclude_holidays=0):
+def get_unmarked_days(
+	employee: str, from_date: str | date, to_date: str | date, exclude_holidays: str | int = 0
+) -> list:
 	joining_date, relieving_date = frappe.get_cached_value(
 		"Employee", employee, ["date_of_joining", "relieving_date"]
 	)
@@ -434,3 +436,42 @@ def get_unmarked_days(employee, from_date, to_date, exclude_holidays=0):
 		from_date = add_days(from_date, 1)
 
 	return unmarked_days
+
+
+@frappe.whitelist()
+def get_employee_shift(employee: str, for_date: str | date | None = None) -> str | None:
+	if not employee:
+		return None
+
+	if employee and not frappe.has_permission("Employee", "read", employee):
+		return None
+
+	if not for_date:
+		for_date = nowdate()
+
+	for_date = getdate(for_date)
+
+	if not frappe.has_permission("Shift Assignment", "read"):
+		return None
+
+	shifts = frappe.get_all(
+		"Shift Assignment",
+		filters={
+			"employee": employee,
+			"docstatus": 1,
+			"status": "Active",
+			"start_date": ("<=", for_date),
+		},
+		fields=["shift_type", "start_date"],
+		order_by="start_date desc",
+		limit=1,
+	)
+
+	if shifts:
+		return shifts[0].shift_type
+
+	default_shift = frappe.db.get_value("Employee", employee, "default_shift")
+	if default_shift:
+		return default_shift
+
+	return None

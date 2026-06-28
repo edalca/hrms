@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 
 import frappe
 from frappe import _
@@ -163,7 +163,7 @@ def has_overlapping_timings(shift_1: str, shift_2: str) -> bool:
 
 
 @frappe.whitelist()
-def get_events(start, end, filters=None):
+def get_events(start: str | date, end: str | date, filters: list | None = None):
 	employee = frappe.db.get_value(
 		"Employee", {"user_id": frappe.session.user}, ["name", "company"], as_dict=True
 	)
@@ -177,7 +177,7 @@ def get_events(start, end, filters=None):
 
 
 def mark_expired_shift_assignments_as_inactive():
-	today = getdate()
+	yesterday = add_days(getdate(), -1)
 	shift_assignment = frappe.qb.DocType("Shift Assignment")
 
 	expired_assignments = (
@@ -187,7 +187,7 @@ def mark_expired_shift_assignments_as_inactive():
 			(shift_assignment.docstatus == 1)
 			& (shift_assignment.status == "Active")
 			& (shift_assignment.end_date.isnotnull())
-			& (shift_assignment.end_date < today)
+			& (shift_assignment.end_date < yesterday)
 		)
 	).run(pluck=True)
 
@@ -475,8 +475,8 @@ def get_prev_or_next_shift(
 	if consider_default_shift and default_shift:
 		direction = -1 if next_shift_direction == "reverse" else 1
 		for i in range(MAX_DAYS):
-			date = for_timestamp + timedelta(days=direction * (i + 1))
-			shift_details = get_employee_shift(employee, date, consider_default_shift, None)
+			date_time = for_timestamp + timedelta(days=direction * (i + 1))
+			shift_details = get_employee_shift(employee, date_time, consider_default_shift, None)
 			if shift_details:
 				return shift_details
 	else:

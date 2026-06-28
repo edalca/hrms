@@ -54,7 +54,7 @@ class PayrollCorrection(Document):
 		delete_employee_benefit_ledger_entry("reference_document", self.name)
 
 	@frappe.whitelist()
-	def fetch_salary_slip_details(self):
+	def fetch_salary_slip_details(self) -> dict[str, list] | None:
 		# Fetch salary slip details with LWP for the employee in the payroll period
 		if not (self.employee and self.payroll_period and self.company):
 			return {"months": [], "slip_details": []}
